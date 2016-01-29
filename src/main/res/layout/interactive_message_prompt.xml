@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ucsf="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/plain_button"
+        android:tint="@color/admin_background"
+        android:scaleType="fitXY"
+        android:id="@+id/background"
+        android:layout_margin="@dimen/components_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/instructions"
+        android:layout_alignTop="@+id/background"
+        android:layout_alignStart="@+id/background"
+        android:layout_alignEnd="@+id/background"
+        android:textColor="@color/text_color"
+        android:layout_margin="@dimen/components_margin"
+        android:layout_above="@+id/button"
+        android:gravity="center" />
+
+    <com.ucsf.core_phone.ui.widgets.MenuButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_alignBottom="@+id/background"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/text_color"
+        ucsf:show_borders="true"
+        ucsf:show_background="false"
+        ucsf:borders_color="@color/white"
+        ucsf:text_color="@color/text_color"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_margin="@dimen/components_margin" />
+
+</RelativeLayout>

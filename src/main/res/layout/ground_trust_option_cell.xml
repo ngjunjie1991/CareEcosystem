@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:background="@drawable/plain_button"
+        android:backgroundTint="@color/admin_background"
+        android:paddingLeft="@dimen/components_margin"
+        android:paddingRight="@dimen/components_margin"
+        android:layout_marginLeft="@dimen/components_margin"
+        android:layout_marginRight="@dimen/components_margin"
+        android:layout_marginTop="@dimen/small_components_margin"
+        android:layout_marginBottom="@dimen/small_components_margin"
+        android:gravity="center" />
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="Theme" format="enum">
+        <enum name="Default"    value="0"/>
+        <enum name="Caregiver"  value="1"/>
+        <enum name="Patient"    value="2"/>
+        <enum name="Admin"      value="3"/>
+    </attr>
+
+    <declare-styleable name="HeaderView">
+        <attr name="header_title"    format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="MenuButton">
+        <attr name="show_borders"     format="boolean"/>
+        <attr name="show_background"  format="boolean"/>
+        <attr name="background_color" format="color"/>
+        <attr name="borders_color"    format="color"/>
+        <attr name="text_color"       format="color"/>
+        <attr name="button_theme"     format="integer"/>
+    </declare-styleable>
+
+</resources>

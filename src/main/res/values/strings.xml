@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Screens -->
+    <string name="app_name">Care Ecosystem</string>
+    <string name="screen_login">Functional Monitoring: Login</string>
+    <string name="screen_admin_main_menu">Functional Monitoring: Admin Mode</string>
+    <string name="screen_admin_patient_info">Functional Monitoring: Patient Info</string>
+    <string name="screen_indoor_settings">Functional Monitoring: Indoor Setup</string>
+    <string name="screen_tester_main_menu">Functional Monitoring: Tester Mode</string>
+    <string name="screen_ground_trust">Functional Monitoring: Ground Trust</string>
+    <string name="screen_services">Functional Monitoring: Services</string>
+    <string name="screen_tables_list">Functional Monitoring: Data Tables</string>
+    <string name="screen_table_content">Functional Monitoring: Table \'%s\'</string>
+    <string name="screen_table_options">Functional Monitoring: Options for \'%s\'</string>
+
+    <!-- Service parameters -->
+    <string name="parameter_delta_period">Maximal period of inactivity</string>
+    <string name="parameter_max_disconnected_duration">Maximal period of connection loss before notifying the server</string>
+
+    <!-- Actions -->
+    <string name="action_login">Login</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_options">Options</string>
+    <string name="action_start_services">Start Data Acquisition</string>
+    <string name="action_stop_services">Stop Data Acquisition</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_start_room_test">Start \'%s\' Test</string>
+    <string name="action_ground_trust">Acquire Ground Trust</string>
+    <string name="action_data_tables">Data Tables</string>
+    <string name="action_services">Services</string>
+    <string name="action_push_data">Force Data to Server</string>
+    <string name="action_enable_camera">Enable Camera</string>
+    <string name="action_disable_camera">Disable Camera</string>
+    <string name="action_new_acquisition">New Acquisition</string>
+
+    <!-- Instructions -->
+    <string name="instruction_patient_id">Please enter the patient ID:</string>
+    <string name="instruction_patient_username">Please enter the patient nickname:</string>
+    <string name="instruction_room_count">Please enter the number of motes that you want to place in the house:</string>
+    <string name="instruction_tallest_ceiling">We are now going to walk through beacon placement.\n\nPlease go to the room with the tallest ceiling and enter its height (in feet):</string>
+    <string name="instruction_first_beacon_installation">Please go to the patient\'s bedroom and place the first beacon on the ceiling, in the center of the room.</string>
+    <string name="instruction_other_beacon_installation">Please go to the next room you want to monitor and place a beacon on the ceiling, in the center of the room.</string>
+    <string name="instruction_beacon_number_remainder">Keep in mind the beacon\'s number.</string>
+    <string name="instruction_beacon_setup">Please fill the following fields:</string>
+    <string name="instruction_test_introduction">The house setup is now complete!\n\nWe will now train the beacons to recognize what it looks like when the patient is in the room.</string>
+    <string name="instruction_room_assignment">Please go next to each beacon and click on the appropriate \'Scan\' button.</string>
+    <string name="instruction_room_connections">Mark allowed transitions for each room.</string>
+    <string name="instruction_test_connection">Please wait until watch connection&#8230;</string>
+    <string name="instruction_test_error">Failed to connect to the watch.\nPlease make sure that the watch is on and try again.</string>
+    <string name="instruction_test_transition">Please go to the \'%s\'.</string>
+    <string name="instruction_test_acquisition">Please walk around \'%s\' for about two minutes.\nTry to do as if you were using the room as usual.\n\nData acquisition&#8230;</string>
+    <string name="instruction_test_done">\'%s\' data collected!\n\nNow click on \'Done\' and follow the instructions.</string>
+    <string name="instruction_test_all_done">The configuration is now done. The patient\'s profile will be sent to the server.</string>
+    <string name="instruction_ground_trust">Click on the appropriate button to indicate your current state. The acquisition will not stop unless you specify to do so or you return to the previous screen.</string>
+    <string name="instruction_table_fields">Select the fields you want to display.\n\'patient\' and \'timestamp\' fields can be filtered.</string>
+    <string name="instruction_receiving_watch_data">Please wait, data are uploaded from the watch to the phone&#8230;</string>
+    <string name="instruction_send_config">The patient\'s profile is now completed.\n\nPlease wait until the configuration file is successfully sent to the server&#8230;</string>
+    <string name="instruction_check_connection">The connection to the server failed.\n\nPlease make sure that the Internet connection is enabled and try again.</string>
+    <string name="instruction_wait_server">The patient\'s profile was successfully sent to the server.\n\nData are now analyzed, please wait until the server finishes.</string>
+    <string name="instruction_no_server_response">The server is not responding.\n\nPlease make sure that the Internet connection is enabled and try again.</string>
+    <string name="instruction_no_watch_response">The watch is not responding.\nPlease make sure that the watch is on and try again.</string>
+    <string name="instruction_server_response_received">The patient\'s profile has been successfully sent to the server.\n\nYou can now continue and start data acquisition.</string>
+    <string name="instruction_pushing_data">Please wait, data are uploaded from the phone to the server&#8230;</string>
+    <string name="instruction_server_push_failed">Failed to push data to the server.\n\nPlease make sure that the Internet connection is enabled and try again.</string>
+    <string name="instruction_invalid_patient_profile">Something went wrong during data analysis:\n\"%s\"\n\nPlease make sure that all the information you entered are valid.</string>
+    <string name="instruction_room_data_analysis">Room data are now going to be validated.\nPlease wait&#8230;</string>
+    <string name="instruction_invalid_room_data">The room beacon seems to not function properly&#8230;\nPlease try again or change of beacon.</string>
+
+    <!-- Help -->
+    <string name="help_beacon_id">You can find the beacon id written on the back of the beacon.</string>
+    <string name="help_ceiling_height">Please enter the ceiling height in feet.</string>
+    <string name="help_floor">What floor are you on?\nIf the home has only one floor, pick \'1st Floor\'.</string>
+    <string name="help_room_name">Please enter an unique name to identify the current room.</string>
+    <string name="help_beacon_distance">We measure the position of new beacons in terms of old beacons (in feet).\nYou can choose any direction instead of North and East as long as you keep them for the whole process.</string>
+
+    <!-- Labels -->
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_mote_name">Mote %d</string>
+    <string name="label_room_assigned">Room Assigned</string>
+    <string name="label_edit_room_connections">%s transitions</string>
+    <string name="label_room">Room: </string>
+    <string name="label_from">From: </string>
+    <string name="label_to">To: </string>
+    <string name="label_patient">Patient Id: </string>
+    <string name="label_timestamp_format">mm/dd/yy-hh:mm:ss</string>
+    <string name="label_remove_entry">Remove entry</string>
+    <string name="label_beacon_id">Beacon Id</string>
+    <string name="label_room_name">Room name</string>
+    <string name="label_ceiling_height">Ceiling height</string>
+    <string name="label_floor">Floor</string>
+    <string name="label_north_distance">North distance</string>
+    <string name="label_east_distance">East distance</string>
+    <string name="label_beacon_distance">Beacon Distance</string>
+    <string name="label_information">Information: %s</string>
+    <string name="label_basement">Basement</string>
+    <string name="label_1st_floor">1st Floor</string>
+    <string name="label_2nd_floor">2nd Floor</string>
+    <string name="label_3rd_floor">3rd Floor</string>
+    <string name="label_4th_floor">4th Floor</string>
+    <string name="label_is_committed">Is committed</string>
+    <string name="label_true">true</string>
+    <string name="label_false">false</string>
+    <string name="label_current_room">In what room are you?</string>
+    <string name="label_in_house">Are you in the house?</string>
+    <string name="label_wear_watch">Are you wearing the watch?</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
+
+    <!-- Toast -->
+    <string name="toast_new_entry">New entry added: %s</string>
+    <string name="toast_service_started">The service \'%s\' is now running.</string>
+    <string name="toast_service_failure">The service \'%s\' fails to start.</string>
+    <string name="toast_link_mote_to_room">The room \'%1$s\' is now linked to mote \'%2$s\'.</string>
+    <string name="toast_pushing_data">Pushing data&#8230;</string>
+    <string name="toast_pushed_data">Data successfully pushed to the remote server.</string>
+    <string name="toast_push_error">Failed to push data.</string>
+    <string name="toast_watch_connection">Connecting to the watch. Please wait&#8230;</string>
+    <string name="toast_watch_connected">The watch is now connected, please proceed.</string>
+    <string name="toast_watch_connection_failed">Watch connection failed. Make sure that the watch is on and retry.</string>
+    <string name="toast_wait_config">Please wait until patient\s profile is sent to the server.</string>
+    <string name="toast_wait_server">Please wait until the server finishes to analyse the patient\'s profile.</string>
+
+    <!-- Alerts -->
+    <string name="alert_bluetooth_required">Bluetooth is required for beacon monitoring!</string>
+    <string name="alert_no_beacon_in_range">No beacon in range! Please make sure that at least one beacon is in range.</string>
+    <string name="alert_invalid_patient_id">Please enter a valid patient ID.</string>
+    <string name="alert_invalid_patient_username">Please enter a valid patient username.</string>
+    <string name="alert_wrong_room_count">Please enter a valid number of motes.</string>
+    <string name="alert_invalid_height">Please enter a valid height distance.</string>
+    <string name="alert_mote_undefined">Please click on the \'Scan\' button near to a mote to associate it with the appropriate room.</string>
+    <string name="alert_mote_unnamed">Please enter the room\'s name.</string>
+    <string name="alert_motes_not_valid">Please enter the name of each rooms and make sure to assign them to a mote.</string>
+    <string name="alert_no_mote_in_range">No mote in range</string>
+    <string name="alert_room_unconnected">Please connect all the rooms.</string>
+    <string name="alert_settings_invalid">This action cannot be done - some settings are not properly setup.</string>
+    <string name="alert_unchecked_rooms">Some rooms have not been checked.</string>
+    <string name="alert_service_running">The service \'%s\' is running.</string>
+    <string name="alert_service_enabled">The service \'%s\' is enabled.</string>
+    <string name="alert_service_disabled">The service \'%s\' is disabled.</string>
+    <string name="alert_service_error">The service \'%s\' fails to start.</string>
+    <string name="alert_invalid_table_name">The table \'%s\' cannot be found in the DataManager.</string>
+    <string name="alert_remove_entry">Do you really want to remove this entry from the table \'%s\'?</string>
+    <string name="alert_invalid_room_parameters">Please make sure that you filled properly all the fields.</string>
+    <string name="alert_wait_gps">Please wait until gps location is acquired.</string>
+    <string name="alert_new_acquisition">Starting a new acquisition will delete previously acquired data. Do you really want to continue?</string>
+
+</resources>

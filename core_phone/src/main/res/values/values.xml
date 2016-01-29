@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Colors -->
+    <color name="background">#ffffffff</color>
+    <color name="text_color">#ffffffff</color>
+    <color name="edit_text_color">#ff515151</color>
+    <color name="default_background">#ff7f7f7f</color>
+    <color name="default_foreground">#ffffffff</color>
+    <color name="caregiver_background">#ffab3541</color>
+    <color name="caregiver_foreground">#ff852730</color>
+    <color name="patient_background">#ffe8b639</color>
+    <color name="patient_foreground">#ff5c4817</color>
+    <color name="admin_background">#ff4d7095</color>
+    <color name="admin_foreground">#ff243548</color>
+    <color name="header_status_icon">#ffd4d4d4</color>
+    <color name="header_text_color">#ffa9a9a9</color>
+
+    <!-- Button properties -->
+    <dimen name="button_text_size">20sp</dimen>
+    <dimen name="menu_button_min_width">110dp</dimen>
+    <dimen name="menu_button_min_height">50dp</dimen>
+    <dimen name="nav_button_min_width">110dp</dimen>
+    <dimen name="nav_button_min_height">30dp</dimen>
+    <dimen name="nav_button_margin">15dp</dimen>
+    <dimen name="list_button_min_height">32dp</dimen>
+
+    <!-- Header properties -->
+    <dimen name="header_margin">10dp</dimen>
+    <dimen name="header_text_size">16sp</dimen>
+    <dimen name="header_max_height">90dp</dimen>
+    <dimen name="header_status_size">32dp</dimen>
+
+    <!-- General properties -->
+    <dimen name="components_margin">10dp</dimen>
+    <dimen name="menu_list_margin">20dp</dimen>
+    <dimen name="small_message_margin">40dp</dimen>
+    <dimen name="small_components_margin">5dp</dimen>
+    <dimen name="message_padding">20dp</dimen>
+    <dimen name="text_size">20sp</dimen>
+    <dimen name="small_text_size">12sp</dimen>
+    <dimen name="size_64px">64dp</dimen>
+
+</resources>

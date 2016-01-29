@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ucsf="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".StartScreenActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ucsf.core_phone.ui.widgets.HeaderView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ucsf:header_title="@string/screen_functional_monitoring"
+        android:id="@+id/header" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/header"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/start_screen_background" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_login"
+        android:src="@drawable/login"
+        android:background="@null"
+        android:maxWidth="16dp"
+        android:maxHeight="16dp"
+        android:alpha="0.5"
+        android:layout_margin="@dimen/components_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

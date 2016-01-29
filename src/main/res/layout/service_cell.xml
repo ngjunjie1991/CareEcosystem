@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/expand_button"
+        android:layout_gravity="center_vertical"
+        android:adjustViewBounds="false"
+        android:src="@android:drawable/arrow_down_float"
+        android:tint="@color/admin_background"
+        android:background="@null"
+        android:layout_margin="@dimen/small_components_margin"
+        android:focusable="false" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/deviceIcon"
+        android:src="@drawable/watch"
+        android:minWidth="16dp"
+        android:minHeight="16dp"
+        android:maxWidth="16dp"
+        android:maxHeight="16dp"
+        android:adjustViewBounds="true"
+        android:tint="@color/admin_background"
+        android:layout_marginLeft="@dimen/small_components_margin"
+        android:layout_marginTop="@dimen/small_components_margin"
+        android:layout_marginBottom="@dimen/small_components_margin" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/label"
+        android:textColor="@color/admin_foreground"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/small_components_margin"
+        android:gravity="center_vertical"
+        android:singleLine="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/icon"
+        android:src="@drawable/enabled"
+        android:maxWidth="16dp"
+        android:maxHeight="16dp"
+        android:background="@null"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/small_components_margin" />
+</LinearLayout>

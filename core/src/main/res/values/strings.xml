@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Service -->
+    <string name="service_sensors">Sensors</string>
+    <string name="service_sensors_description">Service responsible of monitoring device sensors.</string>
+    <string name="service_battery">Battery Monitoring</string>
+    <string name="service_battery_description">Service responsible of monitoring device battery.</string>
+    <string name="service_cleanup">Cleanup Service</string>
+    <string name="service_cleanup_description">Service responsible of removing the oldest entries of the internal database.</string>
+    <string name="service_beacon_monitoring">Beacon Monitoring</string>
+    <string name="service_beacon_monitoring_description">Service responsible of getting beacons RSSI.</string>
+    <string name="service_phone_data">Phone SyncUp</string>
+    <string name="service_phone_data_description">Service responsible of sending watch data to the phone.</string>
+    <string name="service_patient_watcher">Patient Watcher</string>
+    <string name="service_patient_watcher_description">Service responsible of checking if the patient is wearing the watch.</string>
+    <string name="service_server">Remote Server</string>
+    <string name="service_server_description">Service responsible of sending data contained in the internal database to a remote server.</string>
+    <string name="service_server_listener">Server Listener</string>
+    <string name="service_server_listener_description">Service responsible of getting messages from a remote server.</string>
+    <string name="service_gps">GPS Location</string>
+    <string name="service_gps_description">Service responsible of tracking the GPS coordinates of the subject.</string>
+    <string name="service_gait">Gait Speed &amp; Step Count</string>
+    <string name="service_gait_description">Service responsible of computing the average gait speed and step count of the subject on a daily basis.</string>
+    <string name="service_life_space">Life Space</string>
+    <string name="service_life_space_description">Service responsible of computing the life space (average location and furthest location) of the subject on a daily basis.</string>
+    <string name="service_watch_listener">Watch Listener</string>
+    <string name="service_watch_listener_description">Service responsible of getting data from the subject\'s watch.</string>
+    <string name="service_startup">Startup Service</string>
+    <string name="service_startup_descriptions">Regularly check if the services are running.</string>
+
+    <!-- Service parameters -->
+    <string name="parameter_enabled">Is service enabled</string>
+    <string name="parameter_interval">Activation period</string>
+    <string name="parameter_sensors_accelerometer">Is accelerometer enabled</string>
+    <string name="parameter_sensors_gyroscope">Is gyroscope enabled</string>
+    <string name="parameter_sensors_heart">Is heart monitor enabled</string>
+    <string name="parameter_sensors_steps">Is step counter enabled</string>
+    <string name="parameter_cleanup_period">Max time before data deletion</string>
+    <string name="parameter_cleanup_callback">Force Cleanup</string>
+    <string name="parameter_reminder_period">Reminder period</string>
+    <string name="parameter_battery_threshold">Battery level (in percents) under which one an alert is sent.</string>
+
+    <!-- Toast -->
+    <string name="toast_service_started">The service \'%s\' is now running.</string>
+    <string name="toast_service_failure">The service \'%s\' failed to start.</string>
+    <string name="toast_cleanup">Cleaning data&#8230;</string>
+
+    <!-- Alert -->
+    <string name="alert_bluetooth_required">Bluetooth is required for beacon monitoring!</string>
+
+</resources>

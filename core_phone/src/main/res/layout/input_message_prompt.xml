@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_message_margin"
+        android:layout_marginRight="@dimen/small_message_margin"
+        android:background="@drawable/plain_button"
+        android:backgroundTint="@color/admin_foreground"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:id="@+id/layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/instructions"
+            android:textColor="@color/text_color"
+            android:layout_margin="@dimen/components_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_field_layout"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/small_message_margin"
+            android:layout_marginTop="@dimen/components_margin"
+            android:layout_marginRight="@dimen/components_margin"
+            android:layout_marginBottom="@dimen/components_margin"
+            android:orientation="horizontal"
+            android:background="@drawable/edit_text"
+            android:backgroundTint="@color/admin_background"
+            android:backgroundTintMode="screen"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/small_components_margin"
+            android:paddingRight="@dimen/small_components_margin">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_field"
+                android:inputType="number"
+                android:gravity="center_vertical|right"
+                android:layout_weight="1"
+                android:background="@null"
+                android:textColor="@color/edit_text_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/unit_label"
+                android:text="@string/label_unit"
+                android:textColor="@color/edit_text_color"
+                android:layout_marginLeft="@dimen/small_components_margin" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+</RelativeLayout>

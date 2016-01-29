@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application -->
+    <string name="screen_functional_monitoring">Functional Monitoring</string>
+    <string name="screen_new_profile">Functional Monitoring: New Profile</string>
+    <string name="screen_login">Functional Monitoring: Login</string>
+
+    <!-- Actions -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_done">Done</string>
+    <string name="action_back">Back</string>
+    <string name="action_next">Next</string>
+    <string name="action_save">Save</string>
+    <string name="action_no">No</string>
+    <string name="action_yes">Yes</string>
+
+    <!-- Instructions -->
+    <string name="instructions_new_profile">Please enter the required information.</string>
+    <string name="instruction_wait_send_data">A message has been sent to the server.\nPlease wait&#8230;</string>
+    <string name="instruction_wait_server_response">Your message has been received by the server.\nPlease wait until you receive a response&#8230;</string>
+
+    <!-- Errors -->
+    <string name="error_server_upload_failed">Your message cannot be send to the server.\nMake sure that your phone is connected to the Internet an try again.</string>
+    <string name="error_no_server_response">The server is not responding.\nPlease try again.\nIf the issue persists, please contact a system administrator.</string>
+    <string name="error_invalid_caregiver_profile">The information you entered are not valid!\n%s\nMake sure to properly fill all the required fields.</string>
+    <string name="error_no_caregiver_id_provided">Please enter your caregiver ID.</string>
+    <string name="error_no_email_provided">Please enter a valid email.</string>
+    <string name="error_no_phone_number_provided">Please enter a valid phone number.</string>
+    <string name="error_no_password_provided">Please enter a valid password.</string>
+    <string name="error_no_username_provided">Please enter a valid username.</string>
+    <string name="error_invalid_password_confirmation">Please make sure that you entered the same password twice.</string>
+    <string name="error_wrong_id_or_password">The provided id or password is not valid.</string>
+    <string name="error_no_patient_authorization">You don\'t have the authorization to monitor this patient.\nPlease make sure that you entered the right patient ID.</string>
+
+    <!-- Labels -->
+    <string name="label_pick_time">Pick a time</string>
+    <string name="label_unit">ft</string>
+    <string name="label_caregiver_id">Caregiver ID</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_password_confirmation">Confirmation</string>
+    <string name="label_email">Email</string>
+    <string name="label_phone_number">Phone Number</string>
+    <string name="label_use_phone_number">Do you accept to receive SMS?</string>
+    <string name="label_use_email">Do you accept to receive emails?</string>
+    <string name="label_forgotten_password">I have forgotten my password.</string>
+    <string name="label_no_account">I don\'t have an account.</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_password_sent">Your password has been sent to your email address.</string>
+
+</resources>

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@drawable/plain_button"
+    android:backgroundTint="@color/admin_background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/instruction_beacon_setup"
+        android:id="@+id/textView"
+        android:textColor="@color/text_color"
+        android:layout_margin="@dimen/components_margin" />
+
+
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:stretchColumns="2"
+        android:layout_margin="@dimen/components_margin">
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_beacon_id"
+                android:layout_column="0"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_components_margin" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/beaconIdButton"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/help"
+                android:tint="@color/white"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/beaconIdEditText"
+                android:layout_column="2"
+                android:layout_margin="@dimen/small_components_margin"
+                android:paddingLeft="@dimen/small_components_margin"
+                android:paddingRight="@dimen/small_components_margin"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/edit_text"
+                android:backgroundTint="@color/admin_background"
+                android:backgroundTintMode="screen"
+                android:textColor="@color/edit_text_color"
+                android:inputType="number" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_room_name"
+                android:layout_column="0"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_components_margin" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/roomNameButton"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/help"
+                android:tint="@color/white"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/roomNameEditText"
+                android:layout_column="2"
+                android:layout_margin="@dimen/small_components_margin"
+                android:paddingLeft="@dimen/small_components_margin"
+                android:paddingRight="@dimen/small_components_margin"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/edit_text"
+                android:backgroundTint="@color/admin_background"
+                android:backgroundTintMode="screen"
+                android:textColor="@color/edit_text_color"
+                android:inputType="text" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_ceiling_height"
+                android:layout_column="0"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_components_margin" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ceilingButton"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/help"
+                android:tint="@color/white"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY" />
+
+            <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/ceilingLayout"
+                android:layout_column="2"
+                android:layout_margin="@dimen/small_components_margin"
+                android:paddingLeft="@dimen/small_components_margin"
+                android:paddingRight="@dimen/small_components_margin"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/edit_text"
+                android:backgroundTint="@color/admin_background"
+                android:backgroundTintMode="screen" >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/ceilingEditText"
+                    android:gravity="center_vertical|end"
+                    android:background="@null"
+                    android:textColor="@color/edit_text_color"
+                    android:inputType="number|numberDecimal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ceilingUnitLabel"
+                    android:textColor="@color/edit_text_color"
+                    android:text="@string/label_unit"
+                    android:layout_marginLeft="@dimen/small_components_margin" />
+
+            </LinearLayout>
+
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_floor"
+                android:layout_column="0"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_components_margin" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/floorButton"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/help"
+                android:tint="@color/white"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/floorSpinner"
+                android:gravity="center_vertical|end"
+                android:background="@drawable/edit_text"
+                android:backgroundTint="@color/admin_background"
+                android:backgroundTintMode="screen"
+                android:layout_margin="@dimen/small_components_margin"
+                android:spinnerMode="dropdown" />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/northDistanceRow">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_north_distance"
+                android:layout_column="0"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_components_margin" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/northDistanceButton"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/help"
+                android:tint="@color/white"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY" />
+
+            <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/northDistanceLayout"
+                android:layout_column="2"
+                android:layout_margin="@dimen/small_components_margin"
+                android:paddingLeft="@dimen/small_components_margin"
+                android:paddingRight="@dimen/small_components_margin"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/edit_text"
+                android:backgroundTint="@color/admin_background"
+                android:backgroundTintMode="screen" >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/northDistanceEditText"
+                    android:gravity="center_vertical|end"
+                    android:background="@null"
+                    android:textColor="@color/edit_text_color"
+                    android:inputType="number|numberDecimal|numberSigned" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/northDistanceUnitLabel"
+                    android:textColor="@color/edit_text_color"
+                    android:text="@string/label_unit"
+                    android:layout_marginLeft="@dimen/small_components_margin" />
+
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/eastDistanceRow">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_east_distance"
+                android:layout_column="0"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_components_margin" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/eastDistanceButton"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/help"
+                android:tint="@color/white"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY" />
+
+            <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/eastDistanceLayout"
+                android:layout_column="2"
+                android:layout_margin="@dimen/small_components_margin"
+                android:paddingLeft="@dimen/small_components_margin"
+                android:paddingRight="@dimen/small_components_margin"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/edit_text"
+                android:backgroundTint="@color/admin_background"
+                android:backgroundTintMode="screen" >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/eastDistanceEditText"
+                    android:gravity="center_vertical|end"
+                    android:background="@null"
+                    android:textColor="@color/edit_text_color"
+                    android:inputType="number|numberDecimal|numberSigned" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/eastDistanceUnitLabel"
+                    android:textColor="@color/edit_text_color"
+                    android:text="@string/label_unit"
+                    android:layout_marginLeft="@dimen/small_components_margin" />
+
+            </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

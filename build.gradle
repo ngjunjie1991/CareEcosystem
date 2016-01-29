@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+    }
+}
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    signingConfigs {
+        config {
+            keyAlias 'CareEcosystemKey'
+            keyPassword 'moxie100'
+            storeFile file('CareEcosystem.jks')
+            storePassword 'moxie100'
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.ucsf"
+        minSdkVersion 21
+        targetSdkVersion 22
+        versionCode 8
+        versionName "1.0.g"
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.config
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':core_phone')
+    wearApp project(':wear')
+    compile project(':core')
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+

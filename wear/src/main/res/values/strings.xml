@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Care Ecosystem Watch</string>
+
+    <!-- Service parameters -->
+    <string name="parameter_push_data">Push data to the phone.</string>
+    <string name="parameter_push_all_data">Push data to the phone, including already committed entries.</string>
+    <string name="parameter_sync">Sync up patient info.</string>
+    <string name="parameter_indoor_wait_period">Period between two indoor beacons scans</string>
+    <string name="parameter_outdoor_wait_period">Period between two outdoor beacons scans</string>
+    <string name="parameter_scan_period">Duration of beacons scanning</string>
+    <string name="parameter_start_day">Beginning of the patient\'s day</string>
+    <string name="parameter_end_day">End of the patient\'s day</string>
+
+    <!-- Toasts -->
+    <string name="toast_pushing_data">Pushing data&#8230;</string>
+    <string name="toast_sync">Synchronizing patient information&#8230;</string>
+
+</resources>

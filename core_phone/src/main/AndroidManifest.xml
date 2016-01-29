@@ -1,0 +1,39 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ucsf.core_phone">
+
+    <!-- Needed permissions in order to push data to the server. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Needed permission in order to get messages from the server. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.ucsf.core_phone.permission.C2D_MESSAGE" />
+
+    <permission android:name="com.ucsf.core_phone.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" tools:node="remove" />
+
+    <application android:allowBackup="true" android:theme="@style/app_theme" >
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.ucsf.core_phone" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".services.GcmInstance" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

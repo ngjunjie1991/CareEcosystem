@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ucsf="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/plain_button"
+        android:tint="@color/admin_background"
+        android:scaleType="fitXY"
+        android:id="@+id/background"
+        android:layout_margin="@dimen/components_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/instructions"
+        android:layout_alignTop="@+id/background"
+        android:layout_alignStart="@+id/background"
+        android:layout_alignEnd="@+id/background"
+        android:textColor="@color/text_color"
+        android:layout_margin="@dimen/components_margin"
+        android:layout_above="@+id/globalProgressLayout"
+        android:gravity="center" />
+
+    <com.ucsf.core_phone.ui.widgets.MenuButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_alignBottom="@+id/background"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/text_color"
+        ucsf:show_borders="true"
+        ucsf:show_background="false"
+        ucsf:borders_color="@color/white"
+        ucsf:text_color="@color/text_color"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_margin="@dimen/components_margin" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:layout_alignBottom="@+id/button"
+        android:layout_alignTop="@+id/button"
+        style="@android:style/Widget.ProgressBar.Large"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/background"
+        android:layout_alignRight="@+id/background"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/components_margin"
+        android:layout_marginRight="@dimen/components_margin"
+        android:id="@+id/globalProgressLayout"
+        android:visibility="gone">
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/globalProgressBar"
+            android:layout_marginLeft="@dimen/components_margin"
+            android:layout_marginRight="@dimen/components_margin"
+            android:indeterminate="false"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressLabel"
+            android:gravity="center"
+            android:textColor="@color/text_color" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@drawable/plain_button"
+        android:backgroundTint="@color/admin_background"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/small_text_size"
+        android:padding="@dimen/small_components_margin"
+        android:gravity="center"
+        android:layout_margin="@dimen/small_components_margin"
+        android:layout_gravity="center"
+        android:id="@+id/description"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/label"
+        android:textColor="@color/admin_foreground"
+        android:layout_margin="@dimen/small_components_margin"
+        android:layout_gravity="left|center_vertical"
+        android:singleLine="true"
+        android:layout_weight="1"
+        android:textSize="@dimen/small_text_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_gravity="center"
+        android:background="@drawable/frame_button"
+        android:backgroundTint="@color/admin_background"
+        android:layout_margin="@dimen/small_components_margin"
+        android:gravity="center"
+        android:textColor="@color/admin_foreground"
+        android:textSize="@dimen/small_text_size"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/check_box"
+        android:layout_gravity="center_vertical" />
+
+    <com.ucsf.core_phone.ui.widgets.TimeLabel
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        android:layout_gravity="center_vertical"
+        android:textSize="@dimen/small_text_size"
+        android:textColor="@color/admin_foreground"
+        android:textStyle="bold"
+        android:layout_margin="6dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/resetButton"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/small_components_margin"
+        android:adjustViewBounds="true"
+        android:src="@drawable/reset"
+        style="?android:attr/borderlessButtonStyle"
+        android:maxWidth="24dp"
+        android:maxHeight="24dp"
+        android:minHeight="24dp"
+        android:minWidth="24dp"
+        android:longClickable="false"
+        android:tint="@color/admin_background"
+        android:alpha="50" />
+
+</LinearLayout>

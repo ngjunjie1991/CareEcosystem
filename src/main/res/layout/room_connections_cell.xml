@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label"
+        android:textColor="@color/admin_foreground"
+        android:text="@string/label_mote_name"
+        android:gravity="left|center_vertical"
+        android:minWidth="80dp"
+        android:maxWidth="80dp"
+        android:layout_marginLeft="@dimen/components_margin"
+        android:layout_marginRight="@dimen/components_margin"
+        android:singleLine="true"
+        android:textSize="@dimen/small_text_size"
+        android:layout_centerVertical="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_edit"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/components_margin"
+        android:layout_alignTop="@+id/label_connections"
+        android:layout_alignBottom="@+id/label_connections"
+        android:gravity="center"
+        android:background="@color/admin_background"
+        android:src="@drawable/edit"
+        android:tint="@color/white"
+        android:tintMode="src_atop"
+        android:paddingLeft="@dimen/small_components_margin"
+        android:paddingRight="@dimen/small_components_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_connections"
+        android:layout_toRightOf="@+id/label"
+        android:layout_toLeftOf="@+id/button_edit"
+        android:layout_marginTop="@dimen/small_components_margin"
+        android:background="@drawable/edit_text"
+        android:gravity="left|center_vertical"
+        android:singleLine="true"
+        android:layout_marginBottom="@dimen/small_components_margin"
+        android:paddingLeft="@dimen/small_components_margin"
+        android:paddingRight="@dimen/small_components_margin"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:textSize="@dimen/small_text_size"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

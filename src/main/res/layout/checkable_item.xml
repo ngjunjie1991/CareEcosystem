@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_mote_name"
+        android:id="@+id/label"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/small_components_margin"
+        android:textColor="@color/text_color"
+        android:gravity="left|center_vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/icon" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/icon"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/small_components_margin"
+        android:adjustViewBounds="true"
+        android:src="@drawable/valid"
+        android:tint="@color/white"
+        android:tintMode="src_atop"
+        android:layout_alignParentStart="true"
+        android:maxHeight="16dp"
+        android:maxWidth="16dp" />
+</RelativeLayout>

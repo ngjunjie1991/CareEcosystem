@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item type="id" name="footer" />
+
+    <item type="id" name="value_tag" />
+    <item type="id" name="field_tag" />
+    <item type="id" name="rowId_tag" />
+
+</resources>
