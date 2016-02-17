@@ -10,6 +10,8 @@
     <string name="service_cleanup_description">Service responsible of removing the oldest entries of the internal database.</string>
     <string name="service_beacon_monitoring">Beacon Monitoring</string>
     <string name="service_beacon_monitoring_description">Service responsible of getting beacons RSSI.</string>
+    <string name="service_sensortag_monitoring">SensorTag Monitoring</string>
+    <string name="service_sensortag_monitoring_description">Service responsible of getting SensorTag readings.</string>
     <string name="service_phone_data">Phone SyncUp</string>
     <string name="service_phone_data_description">Service responsible of sending watch data to the phone.</string>
     <string name="service_patient_watcher">Patient Watcher</string>

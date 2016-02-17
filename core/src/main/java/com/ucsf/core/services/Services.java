@@ -382,6 +382,8 @@ public abstract class Services {
          * {@link Provider#startService(ResponseListener)}.
          */
         public final void start(ResponseListener listener) {
+            //// TODO: 16/2/2016 Undo comments, currently blocked to bypass startup checks
+
             if (Settings.getCurrentUserId(context).isEmpty())
                 listener.onFailure("Settings are not valid!", null);
             else if (isServiceRunning())

@@ -7,6 +7,7 @@ import android.support.wearable.view.WatchViewStub;
 
 import com.ucsf.core.services.BeaconMonitoring;
 import com.ucsf.wear.services.RangingService;
+import com.ucsf.wear.services.SensorTagService;
 import com.ucsf.wear.services.StartupService;
 
 /**
@@ -42,6 +43,11 @@ public class WearActivity extends Activity {
                 RangingService.Provider provider = RangingService.getProvider(this);
                 if (!provider.isServiceRunning() && provider.isServiceEnabled())
                     provider.start();
+
+                SensorTagService.Provider sensorTagProvider = SensorTagService.getProvider(this);
+                if (!sensorTagProvider.isServiceRunning() && sensorTagProvider.isServiceEnabled())
+                    sensorTagProvider.start();
+
             } else {
                 BeaconMonitoring.enableBluetooth(this);
             }

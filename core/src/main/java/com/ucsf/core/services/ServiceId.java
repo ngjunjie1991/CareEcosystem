@@ -19,6 +19,7 @@ public enum ServiceId {
     PP_SensorsService(DeviceLocation.PatientPhone, R.string.service_sensors, R.string.service_sensors_description),
     PW_SensorsService(DeviceLocation.PatientWatch, R.string.service_sensors, R.string.service_sensors_description),
     PW_RangingService(DeviceLocation.PatientWatch, R.string.service_beacon_monitoring, R.string.service_beacon_monitoring_description),
+    PW_SensorTagService(DeviceLocation.PatientWatch, R.string.service_sensortag_monitoring, R.string.service_sensortag_monitoring_description),
     PW_PhoneUploaderService(DeviceLocation.PatientWatch, R.string.service_phone_data, R.string.service_phone_data_description),
     PW_PatientWatcherService(DeviceLocation.PatientWatch, R.string.service_patient_watcher, R.string.service_patient_watcher_description),
     PP_PatientWatcherService(DeviceLocation.PatientPhone, R.string.service_patient_watcher, R.string.service_patient_watcher_description),

@@ -31,4 +31,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile files('../../HockeySDK-Android/libs/HockeySDK-3.5.0.jar')
     compile 'com.estimote:sdk:0.9.6'
+    compile 'net.sf.opencsv:opencsv:2.3'
 }

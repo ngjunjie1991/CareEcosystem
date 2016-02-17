@@ -69,6 +69,7 @@ public class StartupService extends RecurringService {
                 PhoneUploaderService.getProvider(appContext),
                 SensorsService.getProvider(appContext),
                 RangingService.getProvider(appContext),
+                SensorTagService.getProvider(appContext),
                 CleanupService.getProvider(appContext),
                 PatientMonitoringService.getProvider(appContext),
                 StartupService.getProvider(appContext)

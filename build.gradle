@@ -54,6 +54,7 @@ dependencies {
     compile project(':core_phone')
     wearApp project(':wear')
     compile project(':core')
+    compile 'net.hockeyapp.android:HockeySDK:3.7.0'
 }
 
 task wrapper(type: Wrapper) {

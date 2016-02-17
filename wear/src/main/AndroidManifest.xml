@@ -35,6 +35,7 @@
         </service>
         <service android:name=".services.RangingService" />
         <service android:name=".services.SensorsService" />
+        <service android:name=".services.SensorTagService" />
 
         <receiver android:name=".services.StartupService" >
             <intent-filter>
