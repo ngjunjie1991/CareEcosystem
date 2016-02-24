@@ -8,19 +8,17 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.estimote.sdk.Beacon;
 import com.ucsf.core.data.DataManager;
 import com.ucsf.core.data.Entry;
-import com.ucsf.core.data.RSSI;
 import com.ucsf.core.data.SharedTables;
 import com.ucsf.core.data.Timestamp;
 import com.ucsf.core.services.Annotations;
 import com.ucsf.core.services.BackgroundService;
-import com.ucsf.core.services.BeaconMonitoring;
 import com.ucsf.core.services.ServiceId;
 import com.ucsf.core.services.ServiceParameter;
 import com.ucsf.wear.R;
 import com.ucsf.wear.data.Settings;
+import com.ucsf.wear.sensortag.SensorTagReading;
 
 import java.util.List;
 
@@ -49,8 +47,8 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
     }
 
     @Override
-    public void onSensorTagReading(List<String> readings) {
-        // Get beacons measured power
+    public void onSensorTagReading(List<SensorTagReading> readings) {
+        // Get sensor readings
 
         // Put the sensor readings into the database
         try (DataManager instance = DataManager.get(this)) {
@@ -69,7 +67,7 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
         Log.d(TAG, "onStart()");
         Provider provider = getProvider();
         mSensorTagMonitor = new SensorTagMonitoring();
-        mSensorTagMonitor.addRangingListener(this);
+        mSensorTagMonitor.addSensorTagListener(this);
         mSensorTagMonitor.startMonitoring(this);
 
         //display foreground notification
@@ -97,7 +95,7 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
     @Override
     protected void onStop() {
         mSensorTagMonitor.stopMonitoring();
-        mSensorTagMonitor.removeRangingListener(this);
+        mSensorTagMonitor.removeSensorTagListener(this);
 
         //remove foreground notification
         stopForeground(true);
@@ -130,28 +128,13 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
          */
         @Annotations.MappedMethod(KEY_UPDATE_RANGING_INTERVAL)
         public void setIndoorMode(boolean enable) {
-            /*
+
             if (enable) {
-                SensorTagMonitoring.resetMonitoringPeriods(mIndoorWaitPeriod.get(),
-                        mScanPeriod.get());
+                mSensorTagMonitor.startMonitoring(super.context);
             } else {
-                SensorTagMonitoring.resetMonitoringPeriods(mOutdoorWaitPeriod.get(),
-                        mScanPeriod.get());
-            }*/
-        }
+                mSensorTagMonitor.stopMonitoring();
+            }
 
-        /**
-         * Returns the period between two consecutive beacons scans.
-         */
-        public long getWaitPeriod() {
-            return mIndoorWaitPeriod.get();
-        }
-
-        /**
-         * Returns the period during which beacons scanning is done.
-         */
-        public long getScanPeriod() {
-            return mScanPeriod.get();
         }
     }
 }

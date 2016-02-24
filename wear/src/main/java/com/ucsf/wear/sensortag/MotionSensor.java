@@ -2,6 +2,7 @@ package com.ucsf.wear.sensortag;
 
 import com.ucsf.wear.services.SensorTagMonitoring;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -77,6 +78,15 @@ public class MotionSensor extends Sensor
         return "Accelerometer(G),"+this.accelerometer.toString()+","
                 +"Gyroscope(deg/s),"+this.gyroscope.toString()+","
                 +"Magnetometer(uT),"+this.magnetometer.toString()+",";
+    }
+
+    @Override
+    public ArrayList<SensorTagReading> getReading() {
+        ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
+        readings.add(new SensorTagReading("Accelerometer",this.accelerometer));
+        readings.add(new SensorTagReading("Gyroscope",this.gyroscope));
+        readings.add(new SensorTagReading("Magnetometer",this.magnetometer));
+        return readings;
     }
 
 }

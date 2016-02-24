@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.ucsf.wear.services.SensorTagMonitoring;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -109,13 +110,13 @@ public abstract class Sensor
     {
         BluetoothGattService service=this.mBluetoothLeService.getService(this.serviceUuid,mBluetoothLeDeviceAddress);
         if(service==null)return;
-        UUID configUuid=UUID.fromString(SensorTagGattAttributes.servToConfig(this.serviceUuid.toString(),"Default"));
+        UUID configUuid=UUID.fromString(SensorTagGattAttributes.servToConfig(this.serviceUuid.toString(), "Default"));
         BluetoothGattCharacteristic configCharacteristic=service.getCharacteristic(configUuid);
         configCharacteristic.setValue(new byte[]{1});
         // Special case: Movement
         if("f000aa80-0451-4000-b000-000000000000".equals(this.serviceUuid.toString()))
             configCharacteristic.setValue(new byte[] {0x7F,0x02});
-        this.mBluetoothLeService.writeCharacteristic(configCharacteristic,mBluetoothLeDeviceAddress);
+        this.mBluetoothLeService.writeCharacteristic(configCharacteristic, mBluetoothLeDeviceAddress);
         try {
             Thread.sleep(400);
         } catch (InterruptedException e) {
@@ -133,8 +134,8 @@ public abstract class Sensor
         if(service==null)return;
         UUID dataUuid=UUID.fromString(SensorTagGattAttributes.servToData(serviceUuid.toString(), "Default"));
         BluetoothGattCharacteristic dataCharacteristic=service.getCharacteristic(dataUuid);
-        this.mBluetoothLeService.setCharacteristicNotification(dataCharacteristic, true,mBluetoothLeDeviceAddress); // Enabled locally.
-        this.mBluetoothLeService.writeDescriptor(dataCharacteristic,mBluetoothLeDeviceAddress); // Enabled remotely.
+        this.mBluetoothLeService.setCharacteristicNotification(dataCharacteristic, true, mBluetoothLeDeviceAddress); // Enabled locally.
+        this.mBluetoothLeService.writeDescriptor(dataCharacteristic, mBluetoothLeDeviceAddress); // Enabled remotely.
         try {
             Thread.sleep(400);
         } catch (InterruptedException e) {
@@ -195,6 +196,11 @@ public abstract class Sensor
 
     @Override
     public String toString()
+    {
+        throw new UnsupportedOperationException("Error: shouldn't be called.");
+    }
+
+    public ArrayList<SensorTagReading> getReading()
     {
         throw new UnsupportedOperationException("Error: shouldn't be called.");
     }

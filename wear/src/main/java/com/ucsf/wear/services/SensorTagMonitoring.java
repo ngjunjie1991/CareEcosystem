@@ -1,8 +1,5 @@
 package com.ucsf.wear.services;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -10,20 +7,11 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Binder;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.estimote.sdk.Beacon;
-import com.ucsf.core.R;
 import com.ucsf.wear.sensortag.BarometerSensor;
 import com.ucsf.wear.sensortag.HumiditySensor;
 import com.ucsf.wear.sensortag.IRTSensor;
@@ -31,14 +19,8 @@ import com.ucsf.wear.sensortag.LuxometerSensor;
 import com.ucsf.wear.sensortag.MotionSensor;
 import com.ucsf.wear.sensortag.Sensor;
 import com.ucsf.wear.sensortag.SensorTagConfiguration;
+import com.ucsf.wear.sensortag.SensorTagReading;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +48,6 @@ public class SensorTagMonitoring {
     private static HashMap<String, SensorTagConfiguration> mBluetoothTargetDevicesMap = new HashMap<String, SensorTagConfiguration>();
     private static HashMap<String, ArrayList<Sensor>> mSensorsMap = new HashMap<String, ArrayList<Sensor>>();
     private static boolean isAutomaticMode = false;
-    private static boolean outputDebug = false;
     private static Context mContext;
     private static final Set<SensorTagListener> mListeners = new HashSet<>();
 
@@ -170,7 +151,8 @@ public class SensorTagMonitoring {
      * @return Return true if the initialization is successful.
      */
     public synchronized void startMonitoring(Context context) {
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();;
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        ;
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
         }
@@ -491,12 +473,15 @@ public class SensorTagMonitoring {
                     s.receiveNotification();
                     s.convert(value);
                     //for debugging/display purposes only
-                    s.getStatus().setLatestReading(s.toString());
-                    s.getStatus().setLatestReadingTimestamp(new Date());
-                    s.getStatus().incrementReadingsCount();
+                    //s.getStatus().setLatestReading(s.toString());
+                    //s.getStatus().setLatestReadingTimestamp(new Date());
+                    //s.getStatus().incrementReadingsCount();
 
-                    String output = deviceAddress + "," + s.toString();
-                    Log.d(TAG, output);
+                    //String output = deviceAddress + "," + s.toString();
+                    //Log.d(TAG, output);
+                    ;
+                    for (SensorTagListener listener : mListeners)
+                        listener.onSensorTagReading(s.getReading());
                 }
             }
 
@@ -510,7 +495,7 @@ public class SensorTagMonitoring {
         //dummy values for testing
         SensorTagConfiguration config = new SensorTagConfiguration();
         config.addSensorType(SensorTagConfiguration.SensorType.BRIGHTNESS);
-        outputMap.put("B0:B4:48:B8:F2:04",config);
+        outputMap.put("B0:B4:48:B8:F2:04", config);
 
         return outputMap;
     }
@@ -578,7 +563,7 @@ public class SensorTagMonitoring {
     /**
      * Adds a ranging listener which is called each time a ranging operation is finished.
      */
-    public static void addRangingListener(SensorTagListener listener) {
+    public static void addSensorTagListener(SensorTagListener listener) {
         synchronized (mListeners) {
             mListeners.add(listener);
         }
@@ -587,7 +572,7 @@ public class SensorTagMonitoring {
     /**
      * Removes a ranging listener.
      */
-    public static void removeRangingListener(SensorTagListener listener) {
+    public static void removeSensorTagListener(SensorTagListener listener) {
         synchronized (mListeners) {
             mListeners.remove(listener);
         }
@@ -596,25 +581,9 @@ public class SensorTagMonitoring {
     public interface SensorTagListener {
         /**
          * Method called at regular interval.
+         *
          * @param readings List of sensortag readings
          */
-        void onSensorTagReading(List<String> readings);
+        void onSensorTagReading(List<SensorTagReading> readings);
     }
-
-    public static String getCurrentTimeStamp() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-    }
-
-    public static String getCurrentShortTimeStamp() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    }
-
-    public static  String getCurrentShortTimeStamp(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-    }
-
-    public static String getCurrentTimeStampForFilename() {
-        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-    }
-
 }
