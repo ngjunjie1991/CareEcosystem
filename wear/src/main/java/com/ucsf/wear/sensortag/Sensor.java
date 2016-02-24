@@ -189,6 +189,10 @@ public abstract class Sensor
         return (upperByte << 16) + (mediumByte << 8) + lowerByte;
     }
 
+    public String getAddress() {
+        return this.mBluetoothLeDeviceAddress;
+    }
+
     /**
      * Converts the byte array to an actual measured value.
      */

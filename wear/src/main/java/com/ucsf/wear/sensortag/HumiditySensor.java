@@ -41,7 +41,7 @@ public class HumiditySensor extends Sensor
     @Override
     public ArrayList<SensorTagReading> getReading() {
         ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
-        readings.add(new SensorTagReading("Humidity",this.humidity));
+        readings.add(new SensorTagReading("Humidity",this.getAddress(),this.humidity));
         return readings;
     }
 }

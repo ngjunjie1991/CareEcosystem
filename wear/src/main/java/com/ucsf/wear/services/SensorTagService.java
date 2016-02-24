@@ -20,6 +20,7 @@ import com.ucsf.wear.R;
 import com.ucsf.wear.data.Settings;
 import com.ucsf.wear.sensortag.SensorTagReading;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +50,15 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
     @Override
     public void onSensorTagReading(List<SensorTagReading> readings) {
         // Get sensor readings
+        for (SensorTagReading reading : readings) {
+            String sensorType = reading.getSensorTypeString();
+            String sensorAddress = reading.getSensorAddressString();
+            List<Double> values = reading.getValues();
+            for (Double value : values) {
+                //retrieve the Double value
+            }
+            //
+        }
 
         // Put the sensor readings into the database
         try (DataManager instance = DataManager.get(this)) {

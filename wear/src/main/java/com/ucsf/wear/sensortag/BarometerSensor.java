@@ -54,7 +54,7 @@ public class BarometerSensor extends Sensor
     @Override
     public ArrayList<SensorTagReading> getReading() {
         ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
-        readings.add(new SensorTagReading("Pressure",this.pressure));
+        readings.add(new SensorTagReading("Pressure",this.getAddress(),this.pressure));
         return readings;
     }
 

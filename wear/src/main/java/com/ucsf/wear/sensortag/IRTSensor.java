@@ -86,8 +86,8 @@ public class IRTSensor extends Sensor
     @Override
     public ArrayList<SensorTagReading> getReading() {
         ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
-        readings.add(new SensorTagReading("Ambient Temp",this.ambient));
-        readings.add(new SensorTagReading("Object Temp",this.objectNew));
+        readings.add(new SensorTagReading("Ambient Temp",this.getAddress(),this.ambient));
+        readings.add(new SensorTagReading("Object Temp",this.getAddress(),this.objectNew));
         return readings;
     }
 

@@ -49,7 +49,7 @@ public class LuxometerSensor extends Sensor
     @Override
     public ArrayList<SensorTagReading> getReading() {
         ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
-        readings.add(new SensorTagReading("Brightness",this.luxvalue));
+        readings.add(new SensorTagReading("Brightness",this.getAddress(),this.luxvalue));
         return readings;
     }
 

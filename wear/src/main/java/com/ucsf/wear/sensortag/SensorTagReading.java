@@ -9,16 +9,19 @@ import java.util.List;
 public class SensorTagReading {
 
     private String sensorType;
+    private String sensorAddress;
     private Double singleDimensionValue;
     private Point3D threeDimensionValue;
 
-    public SensorTagReading(String type, double value) {
+    public SensorTagReading(String type, String address, double value) {
         setSensorType(type);
+        setSensorAddress(address);
         setValue(value);
     }
 
-    public SensorTagReading(String type, Point3D value) {
+    public SensorTagReading(String type, String address, Point3D value) {
         setSensorType(type);
+        setSensorAddress(address);
         setValue(value);
     }
 
@@ -26,8 +29,16 @@ public class SensorTagReading {
         sensorType = type;
     }
 
+    public void setSensorAddress(String address) {
+        sensorAddress = address;
+    }
+
     public String getSensorTypeString() {
         return sensorType;
+    }
+
+    public String getSensorAddressString() {
+        return sensorAddress;
     }
 
     public void setValue(double value) {

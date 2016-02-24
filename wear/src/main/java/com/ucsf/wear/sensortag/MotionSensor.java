@@ -83,9 +83,9 @@ public class MotionSensor extends Sensor
     @Override
     public ArrayList<SensorTagReading> getReading() {
         ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
-        readings.add(new SensorTagReading("Accelerometer",this.accelerometer));
-        readings.add(new SensorTagReading("Gyroscope",this.gyroscope));
-        readings.add(new SensorTagReading("Magnetometer",this.magnetometer));
+        readings.add(new SensorTagReading("Accelerometer",this.getAddress(),this.accelerometer));
+        readings.add(new SensorTagReading("Gyroscope",this.getAddress(),this.gyroscope));
+        readings.add(new SensorTagReading("Magnetometer",this.getAddress(),this.magnetometer));
         return readings;
     }
 
