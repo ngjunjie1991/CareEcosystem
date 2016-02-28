@@ -50,6 +50,7 @@ public class SensorTagMonitoring {
     private static boolean isAutomaticMode = false;
     private static Context mContext;
     private static final Set<SensorTagListener> mListeners = new HashSet<>();
+    private static ArrayList<BluetoothDevice> mPendingSensorCreationList = new ArrayList<BluetoothDevice>();
 
     // Actions.
     public final static String ACTION_GATT_CONNECTED =
@@ -71,6 +72,19 @@ public class SensorTagMonitoring {
     public final static String EXTRA_DEVICEADDRESS =
             "com.ucsf.core.services.sensortag..EXTRA_DEVICEADDRESS";
 
+
+    /*
+    Broad SensorTag connection workflow
+    1) Scan devices that are in advertising mode
+    2) Retrieve available sensors/services on SensorTag
+    3) Connect to SensorTags
+    4) Create sensors
+    5) Start receiving readings
+     */
+
+
+
+
     /**
      * Implements callback methods for GATT events that the app cares about.
      * For example, connection change and services discovered.
@@ -83,7 +97,11 @@ public class SensorTagMonitoring {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 Log.i(TAG, "Connected to GATT server.");
-                Log.i(TAG, "Attempting to start service discovery:" + gatt.discoverServices());
+                Log.i(TAG, "Attempting to start service discovery");
+
+                // upon connection, start discovering sensors available on the SensorTag
+                gatt.discoverServices();
+
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
@@ -99,12 +117,13 @@ public class SensorTagMonitoring {
                 boolean isGood = true;
                 for (int i = 0; i < gatt.getServices().size(); i++) {
                     BluetoothGattService bgs = gatt.getServices().get(i);
-                    Log.w(TAG, "found service " + bgs.getUuid().toString());
-                    Log.w(TAG, bgs.getCharacteristics().toString());
+                    Log.i(TAG, "Found service " + bgs.getUuid().toString());
+                    //Log.i(TAG, bgs.getCharacteristics().toString());
                     if (bgs.getCharacteristics().size() == 0)
                         isGood = false;
                 }
-                createSensors(gatt.getDevice());
+                //createSensors(gatt.getDevice());
+                mPendingSensorCreationList.add(gatt.getDevice());
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -129,7 +148,9 @@ public class SensorTagMonitoring {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            Log.i(TAG, "onCharacteristicChanged received: ");
+            Log.i(TAG, "onCharacteristicChanged received: " + gatt.getDevice().getAddress());
+
+            //save the sensor reading to persistent storage
             updateSensorReading(characteristic.getValue(), gatt.getDevice().getAddress());
         }
 
@@ -357,6 +378,7 @@ public class SensorTagMonitoring {
 
     private void startAutomaticScan() {
         Log.d(TAG, "Scheduled Bluetooth scan started.");
+        mPendingSensorCreationList = new ArrayList<BluetoothDevice>();
         //Scan for Bluetooth devices with specified MAC
         //noinspection deprecation
         mBluetoothAdapter.startLeScan(mLeScanCallback);
@@ -365,6 +387,10 @@ public class SensorTagMonitoring {
 
     private void stopAutomaticScan() {
         Log.d(TAG, "Scheduled Bluetooth scan stopped.");
+        for (BluetoothDevice device : mPendingSensorCreationList) {
+            createSensors(device);
+        }
+
         //noinspection deprecation
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
         if (isAutomaticMode) {
@@ -415,7 +441,10 @@ public class SensorTagMonitoring {
 
             Log.d(TAG, device.getAddress() + " found.");
 
-            connectDevice(device);
+            //only connect to device if currently not in device list
+            if (!mBluetoothDeviceMap.containsKey(device.getAddress())) {
+                connectDevice(device);
+            }
         }
     };
 
@@ -472,9 +501,10 @@ public class SensorTagMonitoring {
                 for (Sensor s : sensors) {
                     s.receiveNotification();
                     s.convert(value);
+                    s.getStatus().setLatestReadingTimestamp(new Date());
+
                     //for debugging/display purposes only
                     //s.getStatus().setLatestReading(s.toString());
-                    //s.getStatus().setLatestReadingTimestamp(new Date());
                     //s.getStatus().incrementReadingsCount();
 
                     //String output = deviceAddress + "," + s.toString();
@@ -495,7 +525,11 @@ public class SensorTagMonitoring {
         //dummy values for testing
         SensorTagConfiguration config = new SensorTagConfiguration();
         config.addSensorType(SensorTagConfiguration.SensorType.BRIGHTNESS);
-        outputMap.put("B0:B4:48:B8:F2:04", config);
+        outputMap.put("B0:B4:48:D0:80:83", config);
+
+        SensorTagConfiguration config2 = new SensorTagConfiguration();
+        config2.addSensorType(SensorTagConfiguration.SensorType.TEMPERATURE);
+        outputMap.put("B0:B4:48:B8:D4:03", config2);
 
         return outputMap;
     }
@@ -523,6 +557,7 @@ public class SensorTagMonitoring {
 
     public static void checkSensorTagInactivity() {
 
+        Log.d(TAG,"Checking SensorTag inactivity threshold...");
 
         Date currentTime = new Date();
         ArrayList<String> inactiveDevices = new ArrayList<String>();
@@ -533,7 +568,9 @@ public class SensorTagMonitoring {
             if (sensors != null) {
                 for (Sensor sensor : sensors) {
                     if (sensor != null) {
+
                         Date lastUpdated = sensor.getStatus().getLatestReadingTimestamp();
+                        Log.d(TAG,sensor.getAddress() + " inactive for " + (currentTime.getTime() - lastUpdated.getTime())/1000 + "s" );
                         if (currentTime.getTime() - lastUpdated.getTime() > SENSOR_INACTIVITY_THRESHOLD) {
                             //check if the last updated time has elapsed by more than the threshold
                             inactive = true;

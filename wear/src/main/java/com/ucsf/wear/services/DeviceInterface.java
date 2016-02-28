@@ -129,6 +129,9 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
                                     cursor = table.fetch(notCommitted, timestampCond);
                             }
 
+                            Log.d(TAG,table.tag);
+                            Log.d(TAG,table.toString());
+
                             if (cursor != null && cursor.moveToFirst()) {
                                 do {
 

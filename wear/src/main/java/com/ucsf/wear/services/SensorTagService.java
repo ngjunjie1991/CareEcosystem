@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service responsible of saving beacons RSSI.
+ * Service responsible of saving SensorTag readings.
  *
- * @author  Julien Jacquemot
+ * @author  Chong Wee Tan
  * @version 1.0
  */
 public class SensorTagService extends BackgroundService implements SensorTagMonitoring.SensorTagListener {
@@ -54,23 +54,37 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
             String sensorType = reading.getSensorTypeString();
             String sensorAddress = reading.getSensorAddressString();
             List<Double> values = reading.getValues();
-            for (Double value : values) {
-                //retrieve the Double value
+            double reading0 = 0, reading1 = 0, reading2 = 0;
+            if(values.size() == 1)
+                reading0 = values.get(0);
+            else if(values.size() == 3)
+            {
+                reading0 = values.get(0);
+                reading1 = values.get(1);
+                reading2 = values.get(2);
             }
-            //
+
+            Log.d(TAG,sensorAddress + "\t" + sensorType + "\t" + reading0 + "\t" + reading1 + "\t" + reading2);
+
+            //Put the sensor readings into the database
+            try (DataManager instance = DataManager.get(this)) {
+                SharedTables.SensorTag.getTable(instance).add(
+                        new Entry(DataManager.KEY_PATIENT_ID    , Settings.getCurrentUserId(this)),
+                        new Entry(DataManager.KEY_TIMESTAMP     , Timestamp.getTimestamp()),
+                        new Entry(SharedTables.SensorTag.KEY_SENSORTAG_ID, sensorAddress),
+                        new Entry(SharedTables.SensorTag.KEY_TYPE, sensorType),
+                        new Entry(SharedTables.SensorTag.KEY_READING_ALL, reading0),
+                        new Entry(SharedTables.SensorTag.KEY_READING_X, reading0),
+                        new Entry(SharedTables.SensorTag.KEY_READING_Y, reading1),
+                        new Entry(SharedTables.SensorTag.KEY_READING_Z, reading2)
+                );
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to get sensortag reading: ", e);
+            }
         }
 
-        // Put the sensor readings into the database
-        try (DataManager instance = DataManager.get(this)) {
-            SharedTables.Estimote.getTable(instance).add(
-                    new Entry(DataManager.KEY_PATIENT_ID    , Settings.getCurrentUserId(this)),
-                    new Entry(DataManager.KEY_TIMESTAMP     , Timestamp.getTimestamp()),
-                    new Entry(SharedTables.Estimote.KEY_RSSI, "", true)
-            );
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to save beacons RSSI: ", e);
-        }
     }
+
 
     @Override
     protected void onStart() throws Exception {
