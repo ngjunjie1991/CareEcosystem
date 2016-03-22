@@ -2,6 +2,7 @@ package com.ucsf.wear.sensortag;
 
 import com.ucsf.wear.services.SensorTagMonitoring;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -37,4 +38,10 @@ public class HumiditySensor extends Sensor
         return "Humidity(rH)," + this.humidity+",";
     }
 
+    @Override
+    public ArrayList<SensorTagReading> getReading() {
+        ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
+        readings.add(new SensorTagReading("Humidity",this.getAddress(),this.humidity));
+        return readings;
+    }
 }

@@ -2,6 +2,7 @@ package com.ucsf.wear.sensortag;
 
 import com.ucsf.wear.services.SensorTagMonitoring;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static java.lang.Math.pow;
@@ -80,6 +81,14 @@ public class IRTSensor extends Sensor
     public String toString()
     {
         return "Ambient Temp(C),"+this.ambient+",Object Temp(C),"+this.objectNew+",";
+    }
+
+    @Override
+    public ArrayList<SensorTagReading> getReading() {
+        ArrayList<SensorTagReading> readings = new ArrayList<SensorTagReading>();
+        readings.add(new SensorTagReading("Ambient Temp",this.getAddress(),this.ambient));
+        readings.add(new SensorTagReading("Object Temp",this.getAddress(),this.objectNew));
+        return readings;
     }
 
 }
