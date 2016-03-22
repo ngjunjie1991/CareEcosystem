@@ -193,9 +193,11 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
                 break;
             case PATIENT_OUTSIDE:
                 updateRangingWaitInterval(false);
+                updateSensorTagMode(false);
                 break;
             case PATIENT_INSIDE:
                 updateRangingWaitInterval(true);
+                updateSensorTagMode(true);
                 break;
             default:
                 Log.w(TAG, String.format("Unexpected event '%s'!", event.getTag()));
@@ -246,6 +248,10 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
      */
     private void updateRangingWaitInterval(boolean atHome) {
         RangingService.getProvider(this).setIndoorMode(atHome);
+    }
+
+    private void updateSensorTagMode(boolean atHome) {
+        SensorTagService.getProvider(this).setIndoorMode(atHome);
     }
 
     /**

@@ -132,23 +132,13 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
      * Ranging service provider class.
      */
     public static class Provider extends BackgroundService.Provider {
-        private final ServiceParameter<Long> mIndoorWaitPeriod;
-        private final ServiceParameter<Long> mOutdoorWaitPeriod;
-        private final ServiceParameter<Long> mScanPeriod;
 
         private Provider(Context context) {
             super(context, SensorTagService.class, ServiceId.PW_SensorTagService);
-
-            mIndoorWaitPeriod = addParameter("INDOOR_WAIT_PERIOD",
-                    R.string.parameter_indoor_wait_period, 60000L);
-            mOutdoorWaitPeriod = addParameter("OUTDOOR_WAIT_PERIOD",
-                    R.string.parameter_outdoor_wait_period, 300000L);
-            mScanPeriod = addParameter("SCAN_PERIOD",
-                    R.string.parameter_scan_period, 6000L);
         }
 
         /**
-         * Changes the ranging interval depending on if the patient is at home or not.
+         * Changes the sensortag scan interval depending on if the patient is at home or not.
          */
         @Annotations.MappedMethod(KEY_UPDATE_RANGING_INTERVAL)
         public void setIndoorMode(boolean enable) {

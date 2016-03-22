@@ -43,14 +43,14 @@ public class SensorTagMonitoring {
     private static final long SCAN_PERIOD = 6000; // Stops scanning after 6 seconds.
     private static final long SCAN_INTERVAL = 60000; // Performs automatic scans every 1 minutes
     private static final long SENSOR_INACTIVITY_THRESHOLD = 120000; // Set threshold for sensor inactivity to 2 minutes
-    private static HashMap<String, BluetoothDevice> mBluetoothDeviceMap = new HashMap<String, BluetoothDevice>();
-    private static HashMap<String, BluetoothGatt> mBluetoothGattMap = new HashMap<String, BluetoothGatt>();
-    private static HashMap<String, SensorTagConfiguration> mBluetoothTargetDevicesMap = new HashMap<String, SensorTagConfiguration>();
-    private static HashMap<String, ArrayList<Sensor>> mSensorsMap = new HashMap<String, ArrayList<Sensor>>();
+    private static HashMap<String, BluetoothDevice> mBluetoothDeviceMap = new HashMap<>();
+    private static HashMap<String, BluetoothGatt> mBluetoothGattMap = new HashMap<>();
+    private static HashMap<String, SensorTagConfiguration> mBluetoothTargetDevicesMap = new HashMap<>();
+    private static HashMap<String, ArrayList<Sensor>> mSensorsMap = new HashMap<>();
     private static boolean isAutomaticMode = false;
     private static Context mContext;
     private static final Set<SensorTagListener> mListeners = new HashSet<>();
-    private static ArrayList<BluetoothDevice> mPendingSensorCreationList = new ArrayList<BluetoothDevice>();
+    private static ArrayList<BluetoothDevice> mPendingSensorCreationList = new ArrayList<>();
 
     // Actions.
     public final static String ACTION_GATT_CONNECTED =
@@ -95,7 +95,7 @@ public class SensorTagMonitoring {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = ACTION_GATT_CONNECTED;
+                //intentAction = ACTION_GATT_CONNECTED;
                 Log.i(TAG, "Connected to GATT server.");
                 Log.i(TAG, "Attempting to start service discovery");
 
@@ -103,7 +103,7 @@ public class SensorTagMonitoring {
                 gatt.discoverServices();
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED;
+                //intentAction = ACTION_GATT_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
 
                 String address = gatt.getDevice().getAddress();
@@ -114,13 +114,13 @@ public class SensorTagMonitoring {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                boolean isGood = true;
+                //boolean isGood = true;
                 for (int i = 0; i < gatt.getServices().size(); i++) {
                     BluetoothGattService bgs = gatt.getServices().get(i);
                     Log.i(TAG, "Found service " + bgs.getUuid().toString());
                     //Log.i(TAG, bgs.getCharacteristics().toString());
-                    if (bgs.getCharacteristics().size() == 0)
-                        isGood = false;
+                    //if (bgs.getCharacteristics().size() == 0)
+                    //    isGood = false;
                 }
                 //createSensors(gatt.getDevice());
                 mPendingSensorCreationList.add(gatt.getDevice());
@@ -169,11 +169,11 @@ public class SensorTagMonitoring {
     /**
      * Initializes a reference to the local Bluetooth adapter.
      *
-     * @return Return true if the initialization is successful.
+     * Return true if the initialization is successful.
      */
     public synchronized void startMonitoring(Context context) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        ;
+
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
         }
@@ -261,7 +261,7 @@ public class SensorTagMonitoring {
             return;
         }
 
-        ArrayList<String> addresses = new ArrayList<String>();
+        ArrayList<String> addresses = new ArrayList<>();
         for (String address : mBluetoothGattMap.keySet()) {
             addresses.add(address);
         }
@@ -337,7 +337,7 @@ public class SensorTagMonitoring {
      *
      * @return A {@code List} of supported services.
      */
-    public static List<BluetoothGattService> getSupportedGattServices(String address) {
+    public List<BluetoothGattService> getSupportedGattServices(String address) {
         if (mBluetoothAdapter == null || !mBluetoothGattMap.containsKey(address)) {
             Log.w(TAG, address + ": getSupportedGattServices - BluetoothAdapter not initialized or GATT does not exist");
             return null;
@@ -378,7 +378,7 @@ public class SensorTagMonitoring {
 
     private void startAutomaticScan() {
         Log.d(TAG, "Scheduled Bluetooth scan started.");
-        mPendingSensorCreationList = new ArrayList<BluetoothDevice>();
+        mPendingSensorCreationList = new ArrayList<>();
         //Scan for Bluetooth devices with specified MAC
         //noinspection deprecation
         mBluetoothAdapter.startLeScan(mLeScanCallback);
@@ -459,7 +459,7 @@ public class SensorTagMonitoring {
 
     public void createSensors(BluetoothDevice device) {
         if (isAutomaticMode && mBluetoothTargetDevicesMap.containsKey(device.getAddress())) {
-            ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+            ArrayList<Sensor> sensors = new ArrayList<>();
             String address = device.getAddress();
 
             for (BluetoothGattService service : getSupportedGattServices(address)) {
@@ -509,7 +509,7 @@ public class SensorTagMonitoring {
 
                     //String output = deviceAddress + "," + s.toString();
                     //Log.d(TAG, output);
-                    ;
+
                     for (SensorTagListener listener : mListeners)
                         listener.onSensorTagReading(s.getReading());
                 }
@@ -520,7 +520,7 @@ public class SensorTagMonitoring {
     }
 
     private static HashMap<String, SensorTagConfiguration> loadMap() {
-        HashMap<String, SensorTagConfiguration> outputMap = new HashMap<String, SensorTagConfiguration>();
+        HashMap<String, SensorTagConfiguration> outputMap = new HashMap<>();
 
         //dummy values for testing
         SensorTagConfiguration config = new SensorTagConfiguration();
@@ -539,7 +539,7 @@ public class SensorTagMonitoring {
     }
 
     public ArrayList<String> getStatusUpdates() {
-        ArrayList<String> statusUpdates = new ArrayList<String>();
+        ArrayList<String> statusUpdates = new ArrayList<>();
         statusUpdates.add(mBluetoothDeviceMap.size() + " SensorTags connected.");
         for (BluetoothDevice device : mBluetoothDeviceMap.values()) {
             ArrayList<Sensor> sensors = mSensorsMap.get(device.getAddress());
@@ -560,7 +560,7 @@ public class SensorTagMonitoring {
         Log.d(TAG,"Checking SensorTag inactivity threshold...");
 
         Date currentTime = new Date();
-        ArrayList<String> inactiveDevices = new ArrayList<String>();
+        ArrayList<String> inactiveDevices = new ArrayList<>();
         for (String address : mBluetoothDeviceMap.keySet()) {
             boolean inactive = false;
 
@@ -600,7 +600,7 @@ public class SensorTagMonitoring {
     /**
      * Adds a ranging listener which is called each time a ranging operation is finished.
      */
-    public static void addSensorTagListener(SensorTagListener listener) {
+    public void addSensorTagListener(SensorTagListener listener) {
         synchronized (mListeners) {
             mListeners.add(listener);
         }
@@ -609,7 +609,7 @@ public class SensorTagMonitoring {
     /**
      * Removes a ranging listener.
      */
-    public static void removeSensorTagListener(SensorTagListener listener) {
+    public void removeSensorTagListener(SensorTagListener listener) {
         synchronized (mListeners) {
             mListeners.remove(listener);
         }
