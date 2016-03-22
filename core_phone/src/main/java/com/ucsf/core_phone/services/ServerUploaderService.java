@@ -45,8 +45,8 @@ public abstract class ServerUploaderService extends UploaderService {
     private   static final int    SERVER_TIMEOUT            = 60000;
 
     public static abstract class Provider extends UploaderService.Provider {
-        protected final ServerProtocol mProtocol = new ServerSecuredHttpsProtocol(SERVER_HOST);
-
+        //protected final ServerProtocol mProtocol = new ServerSecuredHttpsProtocol(SERVER_HOST);
+        protected final ServerProtocol mProtocol = new ServerHttpsProtocol("198.199.116.85", 22, 8000, "root", "MoncaTLee");
         private int mIncr = 0;
         protected Provider(Context context, Class<? extends ServerUploaderService> serviceClass,
                            ServiceId service) {
