@@ -69,6 +69,7 @@ public class StartupService extends RecurringService {
                     SharedTables.Estimote.getTable(instance),
                     SharedTables.Sensors.getTable(instance),
                     SharedTables.GroundTrust.getTable(instance),
+                    SharedTables.SensorTag.getTable(instance),
                     SharedTables.Logs.getTable(instance),
                     Settings.getPhoneLogsTable(instance),
                     SensorsService.getTable(instance),

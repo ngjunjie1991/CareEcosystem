@@ -134,6 +134,7 @@ public abstract class Messages {
     public enum Request implements Message {
         /** Requests the patient information, i.e. its unique id. */
         PATIENT_INFO    ("patient_info"),
+        SENSORTAG_INFO  ("sensortag_info"),
         /** Requests all the available services. The answer is a list of {@link ServiceDescriptor}. */
         SERVICES        ("services"),
         /**

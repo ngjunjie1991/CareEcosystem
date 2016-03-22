@@ -44,10 +44,12 @@ public class PhoneUploaderService extends UploaderService {
      */
     public static class Provider extends UploaderService.Provider {
         private Provider(Context context) {
+//            super(context, PhoneUploaderService.class, ServiceId.PW_PhoneUploaderService,
+//                    AlarmManager.INTERVAL_HOUR);
             super(context, PhoneUploaderService.class, ServiceId.PW_PhoneUploaderService,
-                    AlarmManager.INTERVAL_HOUR);
+                    AlarmManager.INTERVAL_FIFTEEN_MINUTES);
 
-            addCallback("PUSH_DATA"    , R.string.parameter_push_data, KEY_PUSH_DATA);
+            addCallback("PUSH_DATA", R.string.parameter_push_data, KEY_PUSH_DATA);
             addCallback("PUSH_ALL_DATA", R.string.parameter_push_all_data, KEY_PUSH_ALL_DATA);
             addCallback("SYNC_UP"      , R.string.parameter_sync     , KEY_SYNC_UP);
         }

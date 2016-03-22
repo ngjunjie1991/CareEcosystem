@@ -3,6 +3,7 @@ package com.ucsf.wear.services;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -25,6 +26,7 @@ import com.ucsf.core.services.ServiceParameter;
 import com.ucsf.core.services.Services;
 import com.ucsf.wear.data.Settings;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -66,6 +68,43 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
         });
     }
 
+    public static void setSensortagInfo(final Context context, JSONObject data) throws Exception {
+        List<String> tmpSensortagIdGroup = new ArrayList<String>();
+        List<String> tmpSensortagTypeGroup = new ArrayList<String>();
+
+        JSONArray resultsArray = data.optJSONArray("all_data");
+        if(resultsArray != null) {
+            for (int i = 0; i < resultsArray.length(); i++) {
+                tmpSensortagIdGroup.add(resultsArray.getJSONObject(i).getString("sensortag_id"));
+                tmpSensortagTypeGroup.add(resultsArray.getJSONObject(i).getString("sensortag_type"));
+            }
+            final String sensortagIdGroup = TextUtils.join("/", tmpSensortagIdGroup);
+            final String sensortagTypeGroup = TextUtils.join("/", tmpSensortagTypeGroup);
+            System.out.println(tmpSensortagIdGroup);
+            System.out.println(tmpSensortagTypeGroup);
+            if(sensortagIdGroup.equals(Settings.getCurrentSensortagIdGroup(context))
+                    && sensortagTypeGroup.equals(Settings.getCurrentSensortagTypeGroup(context)))
+            {
+                return;
+            }
+
+            Handler mainHandler = new Handler(context.getMainLooper());
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Services.stopServices();
+                        Settings.setCurrentSensortagIdGroup(context, sensortagIdGroup);
+                        Settings.setCurrentSensortagTypeGroup(context, sensortagTypeGroup);
+                        StartupService.startServices(context);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to start services: ", e);
+                    }
+                }
+            });
+        }
+    }
+
     /**
      * Sends a request in order to get patient information.
      */
@@ -74,6 +113,16 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
             @Override
             public void requestProcessed(Request request, JSONObject data) throws Exception {
                 setPatientInfo(context, data);
+            }
+        });
+    }
+
+    public static void requestSensortagInfo(final Context context) {
+        sendRequest(context, Request.SENSORTAG_INFO, new RequestListener() {
+            @Override
+            public void requestProcessed(Request request, JSONObject data) throws Exception {
+                setSensortagInfo(context, data);
+                //System.out.println("load dataAcquired!!!");
             }
         });
     }
@@ -128,6 +177,9 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
                                 else
                                     cursor = table.fetch(notCommitted, timestampCond);
                             }
+
+                            Log.d(TAG,table.tag);
+                            Log.d(TAG,table.toString());
 
                             if (cursor != null && cursor.moveToFirst()) {
                                 do {
@@ -190,9 +242,11 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
                 break;
             case PATIENT_OUTSIDE:
                 updateRangingWaitInterval(false);
+                updateSensorTagMode(false);
                 break;
             case PATIENT_INSIDE:
                 updateRangingWaitInterval(true);
+                updateSensorTagMode(true);
                 break;
             default:
                 Log.w(TAG, String.format("Unexpected event '%s'!", event.getTag()));
@@ -243,6 +297,10 @@ public class DeviceInterface extends com.ucsf.core.services.DeviceInterface {
      */
     private void updateRangingWaitInterval(boolean atHome) {
         RangingService.getProvider(this).setIndoorMode(atHome);
+    }
+
+    private void updateSensorTagMode(boolean atHome) {
+        SensorTagService.getProvider(this).setIndoorMode(atHome);
     }
 
     /**
