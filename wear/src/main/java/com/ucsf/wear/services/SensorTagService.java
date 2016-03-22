@@ -20,7 +20,6 @@ import com.ucsf.wear.R;
 import com.ucsf.wear.data.Settings;
 import com.ucsf.wear.sensortag.SensorTagReading;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -114,6 +113,8 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
 
         startForeground(54330216, notification);
 
+        ////////////////////////////////////////////////////
+        getSensortagConfig();
     }
 
     @Override
@@ -126,6 +127,11 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         prefs.edit().putBoolean("automaticModeEnabled", false).commit();
 
+    }
+
+    public void getSensortagConfig() {
+        DeviceInterface.requestSensortagInfo(this.getApplicationContext());
+        //What else do you want to do???
     }
 
     /**

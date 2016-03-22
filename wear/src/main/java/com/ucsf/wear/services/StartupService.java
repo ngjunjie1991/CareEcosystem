@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.ucsf.core.data.DataManager;
 import com.ucsf.core.data.SharedTables;
-import com.ucsf.core.services.FrequentRecurringService;
 import com.ucsf.core.services.RecurringService;
 import com.ucsf.core.services.ServiceId;
 import com.ucsf.core.services.Services;
@@ -112,6 +111,7 @@ public class StartupService extends RecurringService {
 
         // Message the current patient once to make sure it matches the one in the phone
         DeviceInterface.requestPatientInfo(appContext);
+        DeviceInterface.requestSensortagInfo(appContext);
     }
 
     @Override

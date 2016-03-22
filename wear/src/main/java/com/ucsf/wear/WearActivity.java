@@ -34,6 +34,7 @@ public class WearActivity extends Activity {
 
         if (!BeaconMonitoring.isBluetoothEnabled())
             BeaconMonitoring.enableBluetooth(this);
+
     }
 
     @Override
