@@ -50,7 +50,8 @@ public abstract class ServerUploaderService extends UploaderService {
         private int mIncr = 0;
         protected Provider(Context context, Class<? extends ServerUploaderService> serviceClass,
                            ServiceId service) {
-            super(context, serviceClass, service, AlarmManager.INTERVAL_HALF_DAY);
+            //super(context, serviceClass, service, AlarmManager.INTERVAL_HALF_DAY);
+            super(context, serviceClass, service, AlarmManager.INTERVAL_FIFTEEN_MINUTES); //send every 15 minutes instead
         }
 
         public abstract ServerListenerService.Provider getServerListenerServiceProvider();

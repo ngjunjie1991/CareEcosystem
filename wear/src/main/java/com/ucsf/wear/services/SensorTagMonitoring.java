@@ -1,8 +1,5 @@
 package com.ucsf.wear.services;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -10,21 +7,12 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Binder;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.util.Log;
 //import android.util.Pair;
 
-import com.estimote.sdk.Beacon;
-import com.ucsf.core.R;
 import com.ucsf.wear.sensortag.BarometerSensor;
 import com.ucsf.wear.sensortag.HumiditySensor;
 import com.ucsf.wear.sensortag.IRTSensor;
@@ -33,14 +21,8 @@ import com.ucsf.wear.sensortag.MotionSensor;
 import com.ucsf.wear.sensortag.Sensor;
 import com.ucsf.wear.sensortag.SensorTagConfiguration;
 import com.ucsf.wear.sensortag.Pair;
+import com.ucsf.wear.sensortag.SensorTagReading;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,19 +51,19 @@ public class SensorTagMonitoring {
     private static final long SCAN_INTERVAL = 60000; // Performs automatic scans every 1 minutes
     private static final long SENSOR_INACTIVITY_THRESHOLD = 120000; // Set threshold for sensor inactivity to 2 minutes
     private static final int MAX_CONNECTED_SENSORTAGS = 3;
-    private static HashMap<String, BluetoothDevice> mBluetoothDeviceMap = new HashMap<String, BluetoothDevice>();
-    private static HashMap<String, BluetoothGatt> mBluetoothGattMap = new HashMap<String, BluetoothGatt>();
-    private static HashMap<String, SensorTagConfiguration> mBluetoothTargetDevicesMap = new HashMap<String, SensorTagConfiguration>();
-    private static HashMap<String, ArrayList<Sensor>> mSensorsMap = new HashMap<String, ArrayList<Sensor>>();
+    private static HashMap<String, BluetoothDevice> mBluetoothDeviceMap = new HashMap<>();
+    private static HashMap<String, BluetoothGatt> mBluetoothGattMap = new HashMap<>();
+    private static HashMap<String, SensorTagConfiguration> mBluetoothTargetDevicesMap = new HashMap<>();
+    private static HashMap<String, ArrayList<Sensor>> mSensorsMap = new HashMap<>();
     // Used to store all available SensorTag connections
     private static PriorityQueue<Pair> mBluetoothScanResults = new PriorityQueue<>();
     // Used to keep track of what SensorTags the app is currently connected to
     private static List<String> mCurrentConnectedBluetooth = new ArrayList<>();
     private static List<Pair> mCurrentConnectedRssi= new ArrayList<>();
     private static boolean isAutomaticMode = false;
-    private static boolean outputDebug = false;
     private static Context mContext;
     private static final Set<SensorTagListener> mListeners = new HashSet<>();
+    private static ArrayList<BluetoothDevice> mPendingSensorCreationList = new ArrayList<>();
 
     private static int mConnectionsAvailable = MAX_CONNECTED_SENSORTAGS;
     private int waitForRssiCallback = 0;
@@ -106,6 +88,19 @@ public class SensorTagMonitoring {
     public final static String EXTRA_DEVICEADDRESS =
             "com.ucsf.core.services.sensortag..EXTRA_DEVICEADDRESS";
 
+
+    /*
+    Broad SensorTag connection workflow
+    1) Scan devices that are in advertising mode
+    2) Retrieve available sensors/services on SensorTag
+    3) Connect to SensorTags
+    4) Create sensors
+    5) Start receiving readings
+     */
+
+
+
+
     /**
      * Implements callback methods for GATT events that the app cares about.
      * For example, connection change and services discovered.
@@ -116,11 +111,15 @@ public class SensorTagMonitoring {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = ACTION_GATT_CONNECTED;
+                //intentAction = ACTION_GATT_CONNECTED;
                 Log.i(TAG, "Connected to GATT server.");
-                Log.i(TAG, "Attempting to start service discovery:" + gatt.discoverServices());
+                Log.i(TAG, "Attempting to start service discovery");
+
+                // upon connection, start discovering sensors available on the SensorTag
+                gatt.discoverServices();
+
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED;
+                //intentAction = ACTION_GATT_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
 
                 String address = gatt.getDevice().getAddress();
@@ -131,16 +130,17 @@ public class SensorTagMonitoring {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                boolean isGood = true;
+                //boolean isGood = true;
                 for (int i = 0; i < gatt.getServices().size(); i++) {
                     BluetoothGattService bgs = gatt.getServices().get(i);
                     //TODO: uncomment onServicesDiscovered
-                    //Log.w(TAG, "found service " + bgs.getUuid().toString());
-                    //Log.w(TAG, bgs.getCharacteristics().toString());
-                    if (bgs.getCharacteristics().size() == 0)
-                        isGood = false;
+                    Log.i(TAG, "Found service " + bgs.getUuid().toString());
+                    //Log.i(TAG, bgs.getCharacteristics().toString());
+                    //if (bgs.getCharacteristics().size() == 0)
+                    //    isGood = false;
                 }
-                createSensors(gatt.getDevice());
+                //createSensors(gatt.getDevice());
+                mPendingSensorCreationList.add(gatt.getDevice());
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -168,6 +168,7 @@ public class SensorTagMonitoring {
                                             BluetoothGattCharacteristic characteristic) {
             //TODO: uncommment oncharacteristicchanged log
             //Log.i(TAG, "onCharacteristicChanged received: ");
+            //save the sensor reading to persistent storage
             updateSensorReading(characteristic.getValue(), gatt.getDevice().getAddress());
         }
 
@@ -196,7 +197,7 @@ public class SensorTagMonitoring {
     /**
      * Initializes a reference to the local Bluetooth adapter.
      *
-     * @return Return true if the initialization is successful.
+     * Return true if the initialization is successful.
      */
     public synchronized void startMonitoring(Context context) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -290,7 +291,7 @@ public class SensorTagMonitoring {
             return;
         }
 
-        ArrayList<String> addresses = new ArrayList<String>();
+        ArrayList<String> addresses = new ArrayList<>();
         for (String address : mBluetoothGattMap.keySet()) {
             addresses.add(address);
         }
@@ -368,7 +369,7 @@ public class SensorTagMonitoring {
      *
      * @return A {@code List} of supported services.
      */
-    public static List<BluetoothGattService> getSupportedGattServices(String address) {
+    public List<BluetoothGattService> getSupportedGattServices(String address) {
         if (mBluetoothAdapter == null || !mBluetoothGattMap.containsKey(address)) {
             Log.w(TAG, address + ": getSupportedGattServices - BluetoothAdapter not initialized or GATT does not exist");
             return null;
@@ -409,6 +410,7 @@ public class SensorTagMonitoring {
 
     private void startAutomaticScan() {
         Log.d(TAG, "Scheduled Bluetooth scan started.");
+        mPendingSensorCreationList = new ArrayList<>();
         //Scan for Bluetooth devices with specified MAC
         //noinspection deprecation
         mBluetoothScanResults.clear();
@@ -419,6 +421,10 @@ public class SensorTagMonitoring {
 
     private void stopAutomaticScan() {
         Log.d(TAG, "Scheduled Bluetooth scan stopped.");
+        for (BluetoothDevice device : mPendingSensorCreationList) {
+            createSensors(device);
+        }
+
         //noinspection deprecation
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
         if (isAutomaticMode) {
@@ -544,7 +550,7 @@ public class SensorTagMonitoring {
 
     public void createSensors(BluetoothDevice device) {
         if (isAutomaticMode && mBluetoothTargetDevicesMap.containsKey(device.getAddress())) {
-            ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+            ArrayList<Sensor> sensors = new ArrayList<>();
             String address = device.getAddress();
 
             for (BluetoothGattService service : getSupportedGattServices(address)) {
@@ -587,14 +593,17 @@ public class SensorTagMonitoring {
                 for (Sensor s : sensors) {
                     s.receiveNotification();
                     s.convert(value);
-                    //for debugging/display purposes only
-                    s.getStatus().setLatestReading(s.toString());
                     s.getStatus().setLatestReadingTimestamp(new Date());
-                    s.getStatus().incrementReadingsCount();
 
-                    String output = deviceAddress + "," + s.toString();
-                    //TODO: uncomment updatesensorreading
+                    //for debugging/display purposes only
+                    //s.getStatus().setLatestReading(s.toString());
+                    //s.getStatus().incrementReadingsCount();
+
+                    //String output = deviceAddress + "," + s.toString();
                     //Log.d(TAG, output);
+
+                    for (SensorTagListener listener : mListeners)
+                        listener.onSensorTagReading(s.getReading());
                 }
             }
 
@@ -603,12 +612,16 @@ public class SensorTagMonitoring {
     }
 
     private static HashMap<String, SensorTagConfiguration> loadMap() {
-        HashMap<String, SensorTagConfiguration> outputMap = new HashMap<String, SensorTagConfiguration>();
+        HashMap<String, SensorTagConfiguration> outputMap = new HashMap<>();
 
         //dummy values for testing
         SensorTagConfiguration config = new SensorTagConfiguration();
         config.addSensorType(SensorTagConfiguration.SensorType.BRIGHTNESS);
-        outputMap.put("B0:B4:48:B8:F2:04",config);
+        outputMap.put("B0:B4:48:D0:80:83", config);
+
+        SensorTagConfiguration config2 = new SensorTagConfiguration();
+        config2.addSensorType(SensorTagConfiguration.SensorType.TEMPERATURE);
+        outputMap.put("B0:B4:48:B8:D4:03", config2);
 
         return outputMap;
     }
@@ -618,7 +631,7 @@ public class SensorTagMonitoring {
     }
 
     public ArrayList<String> getStatusUpdates() {
-        ArrayList<String> statusUpdates = new ArrayList<String>();
+        ArrayList<String> statusUpdates = new ArrayList<>();
         statusUpdates.add(mBluetoothDeviceMap.size() + " SensorTags connected.");
         for (BluetoothDevice device : mBluetoothDeviceMap.values()) {
             ArrayList<Sensor> sensors = mSensorsMap.get(device.getAddress());
@@ -636,9 +649,10 @@ public class SensorTagMonitoring {
 
     public static void checkSensorTagInactivity() {
 
+        Log.d(TAG,"Checking SensorTag inactivity threshold...");
 
         Date currentTime = new Date();
-        ArrayList<String> inactiveDevices = new ArrayList<String>();
+        ArrayList<String> inactiveDevices = new ArrayList<>();
         for (String address : mBluetoothDeviceMap.keySet()) {
             boolean inactive = false;
 
@@ -646,7 +660,9 @@ public class SensorTagMonitoring {
             if (sensors != null) {
                 for (Sensor sensor : sensors) {
                     if (sensor != null) {
+
                         Date lastUpdated = sensor.getStatus().getLatestReadingTimestamp();
+                        Log.d(TAG,sensor.getAddress() + " inactive for " + (currentTime.getTime() - lastUpdated.getTime())/1000 + "s" );
                         if (currentTime.getTime() - lastUpdated.getTime() > SENSOR_INACTIVITY_THRESHOLD) {
                             //check if the last updated time has elapsed by more than the threshold
                             inactive = true;
@@ -676,7 +692,7 @@ public class SensorTagMonitoring {
     /**
      * Adds a ranging listener which is called each time a ranging operation is finished.
      */
-    public static void addRangingListener(SensorTagListener listener) {
+    public void addSensorTagListener(SensorTagListener listener) {
         synchronized (mListeners) {
             mListeners.add(listener);
         }
@@ -685,7 +701,7 @@ public class SensorTagMonitoring {
     /**
      * Removes a ranging listener.
      */
-    public static void removeRangingListener(SensorTagListener listener) {
+    public void removeSensorTagListener(SensorTagListener listener) {
         synchronized (mListeners) {
             mListeners.remove(listener);
         }
@@ -694,25 +710,9 @@ public class SensorTagMonitoring {
     public interface SensorTagListener {
         /**
          * Method called at regular interval.
+         *
          * @param readings List of sensortag readings
          */
-        void onSensorTagReading(List<String> readings);
+        void onSensorTagReading(List<SensorTagReading> readings);
     }
-
-    public static String getCurrentTimeStamp() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-    }
-
-    public static String getCurrentShortTimeStamp() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    }
-
-    public static  String getCurrentShortTimeStamp(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-    }
-
-    public static String getCurrentTimeStampForFilename() {
-        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-    }
-
 }
