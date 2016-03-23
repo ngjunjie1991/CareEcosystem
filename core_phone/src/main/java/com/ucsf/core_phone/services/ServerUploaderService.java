@@ -45,14 +45,12 @@ public abstract class ServerUploaderService extends UploaderService {
     private   static final int    SERVER_TIMEOUT            = 60000;
 
     public static abstract class Provider extends UploaderService.Provider {
-        //protected final ServerProtocol mProtocol = new ServerSecuredHttpsProtocol(SERVER_HOST);
-        protected final ServerProtocol mProtocol = new ServerHttpsProtocol("198.199.116.85", 22, 8000, "root", "MoncaTLee");
+        protected final ServerProtocol mProtocol = new ServerSecuredHttpsProtocol(SERVER_HOST);
 
         private int mIncr = 0;
         protected Provider(Context context, Class<? extends ServerUploaderService> serviceClass,
                            ServiceId service) {
-            //super(context, serviceClass, service, AlarmManager.INTERVAL_HALF_DAY);
-            super(context, serviceClass, service, AlarmManager.INTERVAL_FIFTEEN_MINUTES); //send every 15 minutes instead
+            super(context, serviceClass, service, AlarmManager.INTERVAL_HALF_DAY);
         }
 
         public abstract ServerListenerService.Provider getServerListenerServiceProvider();
