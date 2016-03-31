@@ -63,7 +63,8 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
                 reading2 = values.get(2);
             }
 
-            Log.d(TAG,sensorAddress + "\t" + sensorType + "\t" + reading0 + "\t" + reading1 + "\t" + reading2);
+            //TODO: Uncomment this for debugging
+            //Log.d(TAG,sensorAddress + "\t" + sensorType + "\t" + reading0 + "\t" + reading1 + "\t" + reading2);
 
             //Put the sensor readings into the database
             try (DataManager instance = DataManager.get(this)) {

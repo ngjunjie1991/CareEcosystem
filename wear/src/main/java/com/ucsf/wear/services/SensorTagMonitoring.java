@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.Log;
 //import android.util.Pair;
 
+import com.ucsf.core.data.Settings;
 import com.ucsf.wear.sensortag.BarometerSensor;
 import com.ucsf.wear.sensortag.HumiditySensor;
 import com.ucsf.wear.sensortag.IRTSensor;
@@ -31,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.UUID;
@@ -59,6 +61,7 @@ public class SensorTagMonitoring {
     private static PriorityQueue<Pair> mBluetoothScanResults = new PriorityQueue<>();
     // Used to keep track of what SensorTags the app is currently connected to
     private static List<String> mCurrentConnectedBluetooth = new ArrayList<>();
+    // Used to keep track of the RSSI of connected SensorTags
     private static List<Pair> mCurrentConnectedRssi= new ArrayList<>();
     private static boolean isAutomaticMode = false;
     private static Context mContext;
@@ -134,7 +137,7 @@ public class SensorTagMonitoring {
                 for (int i = 0; i < gatt.getServices().size(); i++) {
                     BluetoothGattService bgs = gatt.getServices().get(i);
                     //TODO: uncomment onServicesDiscovered
-                    Log.i(TAG, "Found service " + bgs.getUuid().toString());
+                    //Log.i(TAG, "Found service " + bgs.getUuid().toString());
                     //Log.i(TAG, bgs.getCharacteristics().toString());
                     //if (bgs.getCharacteristics().size() == 0)
                     //    isGood = false;
@@ -451,9 +454,9 @@ public class SensorTagMonitoring {
         // if there are still connections available, just connect to highest priority in scan results
         while (mConnectionsAvailable > 0 && !mBluetoothScanResults.isEmpty()) {
             BluetoothDevice deviceToConnect = mBluetoothScanResults.poll().getKey();
-            //TODO: remove this redundant loading of map, should be checking against it instead
-            mBluetoothTargetDevicesMap.put(deviceToConnect.getAddress(), dummyConfig);
-            connectDevice(deviceToConnect);
+            if (mBluetoothTargetDevicesMap.containsKey(deviceToConnect.getAddress())) {
+                connectDevice(deviceToConnect);
+            }
         }
 
         // if mCurrentConnectedRssi not populated yet, don't need to compare
@@ -461,26 +464,33 @@ public class SensorTagMonitoring {
 
         int last = Math.min(MAX_CONNECTED_SENSORTAGS, mBluetoothScanResults.size());
         Collections.sort(mCurrentConnectedRssi);
+        // iterate through mBluetoothScanResults and connect to devices with stronger RSSI than current
         for (int i = 0; i < last; i++) {
-            Pair deviceToConnect = mBluetoothScanResults.poll();
+            Pair pairToConnect = mBluetoothScanResults.poll();
+            BluetoothDevice deviceToConnect = pairToConnect.getKey();
             Iterator<Pair> it  = mCurrentConnectedRssi.iterator();
             Pair currDevice = it.next();
-            while (deviceToConnect.getValue() < currDevice.getValue() && it.hasNext()) {
-                currDevice = it.next();
+            while (pairToConnect.getValue() < currDevice.getValue()) {
+                try {
+                    currDevice = it.next();
+                }
+                catch (NoSuchElementException e) {
+                    currDevice = null;
+                    break;
+                }
             }
             // if new device has stronger RSSI than curr device
-            if (mCurrentConnectedRssi.contains(currDevice)) {
+            if (currDevice != null) {
                 Pair deviceToDisconnect = mCurrentConnectedRssi.get(mCurrentConnectedRssi.size() - 1);
-                Log.d(TAG, "Replacing " + deviceToDisconnect + " with " + deviceToConnect);
+                Log.d(TAG, "Replacing " + deviceToDisconnect + " with " + pairToConnect);
                 int indexToInsert = mCurrentConnectedRssi.indexOf(currDevice);
                 disconnectDevice(deviceToDisconnect.getKey().getAddress());
                 closeDevice(deviceToDisconnect.getKey().getAddress());
                 mCurrentConnectedRssi.remove(deviceToDisconnect);
-
-                //TODO: remove this redundant loading of map, should be checking against it instead
-                mBluetoothTargetDevicesMap.put(deviceToConnect.getKey().getAddress(), dummyConfig);
-                if (connectDevice(deviceToConnect.getKey())) {
-                    mCurrentConnectedRssi.add(indexToInsert, deviceToConnect);
+                if (mBluetoothTargetDevicesMap.containsKey(deviceToConnect.getAddress())) {
+                    if (connectDevice(deviceToConnect)) {
+                        mCurrentConnectedRssi.add(indexToInsert, pairToConnect);
+                    }
                 }
             }
         }
@@ -501,11 +511,49 @@ public class SensorTagMonitoring {
             close();
 
         } else {
+            String sensorTagIds = Settings.getCurrentSensortagIdGroup(mContext);
+            String sensorTypes = Settings.getCurrentSensortagTypeGroup(mContext);
+            Log.d(TAG, "SensorTags: " + sensorTagIds);
+            Log.d(TAG, "SensorTag Types: " + sensorTypes);
 
-//            //populate target devices hashmap
-//            mBluetoothTargetDevicesMap = loadMap();
+            String[] sensorTagIdList = sensorTagIds.split("/");
+            String[] sensorTypeList = sensorTypes.split("/");
 
-            //writeToCSV("Automatic mode started.");
+            int i = 0;
+            for (String id : sensorTagIdList) {
+                SensorTagConfiguration.SensorType tempSensorType = null;
+                switch (sensorTypeList[i]) {
+                    case "Accelerometer": tempSensorType = SensorTagConfiguration.SensorType.MOTION;
+                        break;
+                    case "Gyroscope": tempSensorType = SensorTagConfiguration.SensorType.MOTION;
+                        break;
+                    case "Magnetometer": tempSensorType = SensorTagConfiguration.SensorType.MOTION;
+                        break;
+                    case "Pressure": tempSensorType = SensorTagConfiguration.SensorType.PRESSURE;
+                        break;
+                    case "Humidity": tempSensorType = SensorTagConfiguration.SensorType.HUMIDITY;
+                        break;
+                    case "Ambient Temp": tempSensorType = SensorTagConfiguration.SensorType.TEMPERATURE;
+                        break;
+                    case "Object Temp": tempSensorType = SensorTagConfiguration.SensorType.TEMPERATURE;
+                        break;
+                    case "Brightness": tempSensorType = SensorTagConfiguration.SensorType.BRIGHTNESS;
+                        break;
+                    default: break;
+                }
+                SensorTagConfiguration tempConfig = new SensorTagConfiguration();
+                if (mBluetoothTargetDevicesMap.containsKey(id)) {
+                    tempConfig = mBluetoothTargetDevicesMap.get(id);
+                    tempConfig.addSensorType(tempSensorType);
+                    mBluetoothTargetDevicesMap.put(id, tempConfig);
+                }
+                else {
+                    tempConfig.addSensorType(tempSensorType);
+                    mBluetoothTargetDevicesMap.put(id, tempConfig);
+                }
+            }
+
+
             Log.d(TAG, "Automatic mode started.");
             startAutomaticScan();
         }
