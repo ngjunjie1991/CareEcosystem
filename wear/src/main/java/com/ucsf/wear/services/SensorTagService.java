@@ -89,12 +89,17 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
     @Override
     protected void onStart() throws Exception {
         Log.d(TAG, "onStart()");
+
+        //Launch a new SensorTagMonitoring instance and begin automatic monitoring
         Provider provider = getProvider();
         mSensorTagMonitor = new SensorTagMonitoring();
         mSensorTagMonitor.addSensorTagListener(this);
         mSensorTagMonitor.startMonitoring(this);
 
-        //display foreground notification
+        //Using a foreground notification to keep the service alive. Possible to remove the following
+        //lines if deemed unnecessary since Care Ecosystem checks whether its services are alive
+        //on an hourly basis. Risk is that we may lose the data between the service is killed by
+        //the OS and being relaunched by Care Ecosystem
         Notification.Builder builder = new Notification.Builder(this.getApplicationContext());
 
         Intent intent = new Intent(this.getApplicationContext(), SensorTagMonitoring.class);
@@ -114,12 +119,18 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
 
         startForeground(54330216, notification);
 
-        ////////////////////////////////////////////////////
+        //End foreground notification
+
+
+        //Retrieve SensorTag configuration from phone
         getSensortagConfig();
     }
 
     @Override
     protected void onStop() {
+
+        Log.d(TAG, "onStop()");
+
         mSensorTagMonitor.stopMonitoring();
         mSensorTagMonitor.removeSensorTagListener(this);
 
@@ -127,12 +138,13 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
         stopForeground(true);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         prefs.edit().putBoolean("automaticModeEnabled", false).commit();
-
     }
 
+    /**
+     * Retrieve SensorTag configuration data from the phone
+     */
     public void getSensortagConfig() {
         DeviceInterface.requestSensortagInfo(this.getApplicationContext());
-        //What else do you want to do???
     }
 
     /**
@@ -145,15 +157,19 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
         }
 
         /**
-         * Changes the sensortag scan interval depending on if the patient is at home or not.
+         * Changes the sensortag mode depending on if the patient is at home or not.
          */
         @Annotations.MappedMethod(KEY_UPDATE_RANGING_INTERVAL)
         public void setIndoorMode(boolean enable) {
 
             if (enable) {
+                Log.d(TAG,"Indoor mode activated. Starting SensorTagMonitoring");
                 mSensorTagMonitor.startMonitoring(super.context);
             } else {
-                mSensorTagMonitor.stopMonitoring();
+                Log.d(TAG,"Outdoor mode activated. Stopping SensorTagMonitoring");
+                //TODO: Uncomment the following line to allow disabling of sensor tag monitoring
+                //TODO: when patient is away from home
+                //mSensorTagMonitor.stopMonitoring();
             }
 
         }

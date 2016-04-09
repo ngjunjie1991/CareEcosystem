@@ -50,7 +50,7 @@ public abstract class Sensor
                     enableNotifications();
                 }
                 else
-                    Log.i(TAG,mBluetoothLeDeviceAddress + ": Notifications received in last period");
+                    //Log.i(TAG,mBluetoothLeDeviceAddress + ": Notifications received in last period");
                 wasNotified=false;
 
                 handler.postDelayed(this,5000);

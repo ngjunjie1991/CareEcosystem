@@ -51,7 +51,9 @@ public abstract class ServerUploaderService extends UploaderService {
         protected Provider(Context context, Class<? extends ServerUploaderService> serviceClass,
                            ServiceId service) {
             //super(context, serviceClass, service, AlarmManager.INTERVAL_HALF_DAY);
-            super(context, serviceClass, service, AlarmManager.INTERVAL_FIFTEEN_MINUTES); //send every 15 minutes instead
+            //super(context, serviceClass, service, AlarmManager.INTERVAL_FIFTEEN_MINUTES); //send every 15 minutes instead
+            //super(context, serviceClass, service, 60000L); //send every 1 minutes instead
+            super(context, serviceClass, service, AlarmManager.INTERVAL_HOUR);
         }
 
         public abstract ServerListenerService.Provider getServerListenerServiceProvider();
