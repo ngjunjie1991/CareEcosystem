@@ -44,10 +44,8 @@ public class PhoneUploaderService extends UploaderService {
      */
     public static class Provider extends UploaderService.Provider {
         private Provider(Context context) {
-//            super(context, PhoneUploaderService.class, ServiceId.PW_PhoneUploaderService,
-//                    AlarmManager.INTERVAL_HOUR);
-//            super(context, PhoneUploaderService.class, ServiceId.PW_PhoneUploaderService,
-//                    AlarmManager.INTERVAL_FIFTEEN_MINUTES);
+            //Local database being uploaded to the phone every hour
+            //If the interval is changed, the watch has to be restarted for the change to take effect
             super(context, PhoneUploaderService.class, ServiceId.PW_PhoneUploaderService,
                     AlarmManager.INTERVAL_HOUR);
 

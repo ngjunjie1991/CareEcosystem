@@ -46,13 +46,14 @@ public abstract class ServerUploaderService extends UploaderService {
 
     public static abstract class Provider extends UploaderService.Provider {
         //protected final ServerProtocol mProtocol = new ServerSecuredHttpsProtocol(SERVER_HOST);
+        //TODO: Switch the server back to the UCSF server eventually for the merged integration
         protected final ServerProtocol mProtocol = new ServerHttpsProtocol("198.199.116.85", 22, 8000, "root", "MoncaTLee");
         private int mIncr = 0;
         protected Provider(Context context, Class<? extends ServerUploaderService> serviceClass,
                            ServiceId service) {
+            //TODO: Switch the uploading interval back to HALF_DAY.
+            //TODO: Remember to restart the phone after doing so for the change to take effect.
             //super(context, serviceClass, service, AlarmManager.INTERVAL_HALF_DAY);
-            //super(context, serviceClass, service, AlarmManager.INTERVAL_FIFTEEN_MINUTES); //send every 15 minutes instead
-            //super(context, serviceClass, service, 60000L); //send every 1 minutes instead
             super(context, serviceClass, service, AlarmManager.INTERVAL_HOUR);
         }
 
