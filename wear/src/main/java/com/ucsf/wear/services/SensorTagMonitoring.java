@@ -461,7 +461,7 @@ public class SensorTagMonitoring {
      * The scan results are managed in the callback function: mLeScanCallback
      */
     private void startAutomaticScan() {
-        Log.d(TAG, "Scheduled Bluetooth scan started.");
+        Log.d(TAG, "Scheduled Bluetooth scan started with " + mBluetoothDeviceMap.size() + " connected devices.");
         mPendingSensorCreationList = new ArrayList<>();
         //Scan for Bluetooth devices with specified MAC
         mBluetoothScanResults.clear();
@@ -476,7 +476,7 @@ public class SensorTagMonitoring {
      * It also schedules the next scan
      */
     private void stopAutomaticScan() {
-        Log.d(TAG, "Scheduled Bluetooth scan stopped.");
+        Log.d(TAG, "Scheduled Bluetooth scan stopped and found " + mBluetoothScanResults.size() + " devices." );
 
         //noinspection deprecation
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
