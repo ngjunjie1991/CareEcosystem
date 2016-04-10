@@ -25,21 +25,23 @@ import java.util.List;
 /**
  * Service responsible of saving SensorTag readings.
  *
- * @author  Chong Wee Tan
+ * @author Chong Wee Tan
  * @version 1.0
  */
 public class SensorTagService extends BackgroundService implements SensorTagMonitoring.SensorTagListener {
-    private static final String   TAG                         = "ucsf:SensorTagService";
-    private static final String   KEY_UPDATE_RANGING_INTERVAL = "a";
-    private static       Provider mInstance;
-    private static       SensorTagMonitoring mSensorTagMonitor;
+    private static final String TAG = "ucsf:SensorTagService";
+    private static final String KEY_UPDATE_RANGING_INTERVAL = "a";
+    private static Provider mInstance;
+    private static SensorTagMonitoring mSensorTagMonitor;
 
     @Override
     public Provider getProvider() {
         return getProvider(this);
     }
 
-    /** Returns the service provider. */
+    /**
+     * Returns the service provider.
+     */
     public static Provider getProvider(Context context) {
         if (mInstance == null)
             mInstance = new Provider(context);
@@ -54,10 +56,9 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
             String sensorAddress = reading.getSensorAddressString();
             List<Double> values = reading.getValues();
             double reading0 = 0, reading1 = 0, reading2 = 0;
-            if(values.size() == 1)
+            if (values.size() == 1)
                 reading0 = values.get(0);
-            else if(values.size() == 3)
-            {
+            else if (values.size() == 3) {
                 reading0 = values.get(0);
                 reading1 = values.get(1);
                 reading2 = values.get(2);
@@ -69,8 +70,8 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
             //Put the sensor readings into the database
             try (DataManager instance = DataManager.get(this)) {
                 SharedTables.SensorTag.getTable(instance).add(
-                        new Entry(DataManager.KEY_PATIENT_ID    , Settings.getCurrentUserId(this)),
-                        new Entry(DataManager.KEY_TIMESTAMP     , Timestamp.getTimestamp()),
+                        new Entry(DataManager.KEY_PATIENT_ID, Settings.getCurrentUserId(this)),
+                        new Entry(DataManager.KEY_TIMESTAMP, Timestamp.getTimestamp()),
                         new Entry(SharedTables.SensorTag.KEY_SENSORTAG_ID, sensorAddress),
                         new Entry(SharedTables.SensorTag.KEY_TYPE, sensorType),
                         new Entry(SharedTables.SensorTag.KEY_READING_ALL, reading0),
@@ -88,6 +89,12 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
 
     @Override
     protected void onStart() throws Exception {
+
+        if (mSensorTagMonitor != null) {
+            //if attempting to create another sensortag monitor when current one is still active
+            onStop();
+        }
+
         Log.d(TAG, "onStart()");
 
         //Launch a new SensorTagMonitoring instance and begin automatic monitoring
@@ -118,12 +125,11 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
         prefs.edit().putBoolean("automaticModeEnabled", true).commit();
 
         startForeground(54330216, notification);
-
         //End foreground notification
-
 
         //Retrieve SensorTag configuration from phone
         getSensortagConfig();
+
     }
 
     @Override
@@ -133,6 +139,7 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
 
         mSensorTagMonitor.stopMonitoring();
         mSensorTagMonitor.removeSensorTagListener(this);
+        mSensorTagMonitor = null;
 
         //remove foreground notification
         stopForeground(true);
@@ -163,10 +170,10 @@ public class SensorTagService extends BackgroundService implements SensorTagMoni
         public void setIndoorMode(boolean enable) {
 
             if (enable) {
-                Log.d(TAG,"Indoor mode activated. Starting SensorTagMonitoring");
+                Log.d(TAG, "Indoor mode activated. Starting SensorTagMonitoring");
                 mSensorTagMonitor.startMonitoring(super.context);
             } else {
-                Log.d(TAG,"Outdoor mode activated. Stopping SensorTagMonitoring");
+                Log.d(TAG, "Outdoor mode activated. Stopping SensorTagMonitoring");
                 //TODO: Uncomment the following line to allow disabling of sensor tag monitoring
                 //TODO: when patient is away from home
                 //mSensorTagMonitor.stopMonitoring();

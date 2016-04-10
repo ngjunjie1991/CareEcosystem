@@ -483,6 +483,7 @@ public class SensorTagMonitoring {
         if (isAutomaticMode) {
             //only schedule next scan if automatic mode is enabled
             //schedules the sensor creation to take place at a later time
+            mHandler.removeCallbacks(mStartAutomaticRunnable); //remove any delayed calls to prevent duplicates
             mHandler.postDelayed(mStartAutomaticRunnable, SCAN_INTERVAL);
             mHandler.postDelayed(mCreateSensorsRunnable, SENSOR_CREATION_THRESHOLD);
             Log.d(TAG, "Next Bluetooth scan scheduled.");
@@ -553,11 +554,12 @@ public class SensorTagMonitoring {
      * @param mode to enable/disable monitoring mode
      */
     public void setAutomaticMode(boolean mode) {
-        isAutomaticMode = mode;
+        //isAutomaticMode = mode;
 
         //If the request is to stop the automatic monitoring
         if (!mode) {
 
+            isAutomaticMode = mode;
             Log.d(TAG, "Automatic mode stopped.");
             stopAutomaticScan();
 
@@ -572,54 +574,67 @@ public class SensorTagMonitoring {
 
         //If the request is to start the automatic monitoring
         {
+            //if currently not in automatic mode, ok to start the mode
+            //ignore if we're already in automatic mode
+            if (!isAutomaticMode) {
+                isAutomaticMode = mode;
 
-            //first retrieve sensortag configurations settings
-            //this gives us the list of targeted sensortags and the respective desired sensor types
-            String sensorTagIds = Settings.getCurrentSensortagIdGroup(mContext);
-            String sensorTypes = Settings.getCurrentSensortagTypeGroup(mContext);
-            Log.d(TAG, "SensorTags: " + sensorTagIds);
-            Log.d(TAG, "SensorTag Types: " + sensorTypes);
+                //first retrieve sensortag configurations settings
+                //this gives us the list of targeted sensortags and the respective desired sensor types
+                String sensorTagIds = Settings.getCurrentSensortagIdGroup(mContext);
+                String sensorTypes = Settings.getCurrentSensortagTypeGroup(mContext);
+                Log.d(TAG, "SensorTags: " + sensorTagIds);
+                Log.d(TAG, "SensorTag Types: " + sensorTypes);
 
-            String[] sensorTagIdList = sensorTagIds.split("/");
-            String[] sensorTypeList = sensorTypes.split("/");
+                String[] sensorTagIdList = sensorTagIds.split("/");
+                String[] sensorTypeList = sensorTypes.split("/");
 
-            int i = 0;
-            for (String id : sensorTagIdList) {
-                SensorTagConfiguration.SensorType tempSensorType = null;
-                switch (sensorTypeList[i]) {
-                    case "Accelerometer": tempSensorType = SensorTagConfiguration.SensorType.MOTION;
-                        break;
-                    case "Gyroscope": tempSensorType = SensorTagConfiguration.SensorType.MOTION;
-                        break;
-                    case "Magnetometer": tempSensorType = SensorTagConfiguration.SensorType.MOTION;
-                        break;
-                    case "Pressure": tempSensorType = SensorTagConfiguration.SensorType.PRESSURE;
-                        break;
-                    case "Humidity": tempSensorType = SensorTagConfiguration.SensorType.HUMIDITY;
-                        break;
-                    case "Ambient Temp": tempSensorType = SensorTagConfiguration.SensorType.TEMPERATURE;
-                        break;
-                    case "Object Temp": tempSensorType = SensorTagConfiguration.SensorType.TEMPERATURE;
-                        break;
-                    case "Brightness": tempSensorType = SensorTagConfiguration.SensorType.BRIGHTNESS;
-                        break;
-                    default: break;
+                int i = 0;
+                for (String id : sensorTagIdList) {
+                    SensorTagConfiguration.SensorType tempSensorType = null;
+                    switch (sensorTypeList[i]) {
+                        case "Accelerometer":
+                            tempSensorType = SensorTagConfiguration.SensorType.MOTION;
+                            break;
+                        case "Gyroscope":
+                            tempSensorType = SensorTagConfiguration.SensorType.MOTION;
+                            break;
+                        case "Magnetometer":
+                            tempSensorType = SensorTagConfiguration.SensorType.MOTION;
+                            break;
+                        case "Pressure":
+                            tempSensorType = SensorTagConfiguration.SensorType.PRESSURE;
+                            break;
+                        case "Humidity":
+                            tempSensorType = SensorTagConfiguration.SensorType.HUMIDITY;
+                            break;
+                        case "Ambient Temp":
+                            tempSensorType = SensorTagConfiguration.SensorType.TEMPERATURE;
+                            break;
+                        case "Object Temp":
+                            tempSensorType = SensorTagConfiguration.SensorType.TEMPERATURE;
+                            break;
+                        case "Brightness":
+                            tempSensorType = SensorTagConfiguration.SensorType.BRIGHTNESS;
+                            break;
+                        default:
+                            break;
+                    }
+                    SensorTagConfiguration tempConfig = new SensorTagConfiguration();
+                    if (mBluetoothTargetDevicesMap.containsKey(id)) {
+                        tempConfig = mBluetoothTargetDevicesMap.get(id);
+                        tempConfig.addSensorType(tempSensorType);
+                        mBluetoothTargetDevicesMap.put(id, tempConfig);
+                    } else {
+                        tempConfig.addSensorType(tempSensorType);
+                        mBluetoothTargetDevicesMap.put(id, tempConfig);
+                    }
+                    i++;
                 }
-                SensorTagConfiguration tempConfig = new SensorTagConfiguration();
-                if (mBluetoothTargetDevicesMap.containsKey(id)) {
-                    tempConfig = mBluetoothTargetDevicesMap.get(id);
-                    tempConfig.addSensorType(tempSensorType);
-                    mBluetoothTargetDevicesMap.put(id, tempConfig);
-                }
-                else {
-                    tempConfig.addSensorType(tempSensorType);
-                    mBluetoothTargetDevicesMap.put(id, tempConfig);
-                }
-                i++;
+
+                Log.d(TAG, "Automatic mode started.");
+                startAutomaticScan();
             }
-
-            Log.d(TAG, "Automatic mode started.");
-            startAutomaticScan();
         }
     }
 
@@ -681,7 +696,6 @@ public class SensorTagMonitoring {
             for (BluetoothGattService service : getSupportedGattServices(address)) {
                 Sensor sensor = null;
                 for (SensorTagConfiguration.SensorType sensorType : mBluetoothTargetDevicesMap.get(address).getSensorTypes()) {
-                    //TODO: uncomment log for sensor creation
                     //Log.d(TAG, "GATT Service UUID - " + service.getUuid().toString() + " - " + address);
                     if (sensorType == SensorTagConfiguration.SensorType.TEMPERATURE && "f000aa00-0451-4000-b000-000000000000".equals(service.getUuid().toString())) {
                         sensor = new IRTSensor(service.getUuid(), this, address);
@@ -751,10 +765,10 @@ public class SensorTagMonitoring {
                     if (sensor != null) {
 
                         Date lastUpdated = sensor.getStatus().getLatestReadingTimestamp();
-                        Log.d(TAG,sensor.getAddress() + " inactive for " + (currentTime.getTime() - lastUpdated.getTime())/1000 + "s" );
                         if (currentTime.getTime() - lastUpdated.getTime() > SENSOR_INACTIVITY_THRESHOLD) {
                             //check if the last updated time has elapsed by more than the threshold
                             inactive = true;
+                            Log.d(TAG,sensor.getAddress() + " inactive for " + (currentTime.getTime() - lastUpdated.getTime())/1000 + "s" );
                             break;
                         }
                     } else {
