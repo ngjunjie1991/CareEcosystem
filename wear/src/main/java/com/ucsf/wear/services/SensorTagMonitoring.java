@@ -24,20 +24,17 @@ import com.ucsf.wear.sensortag.SensorTagConfiguration;
 import com.ucsf.wear.sensortag.Pair;
 import com.ucsf.wear.sensortag.SensorTagReading;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Collections;
-import java.util.ListIterator;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -60,7 +57,7 @@ public class SensorTagMonitoring {
     // Set maximum concurrent connections to sensortags
     private static final int MAX_CONNECTED_SENSORTAGS = 3;
     // Hashmap of connected devices
-    private static HashMap<String, BluetoothDevice> mBluetoothDeviceMap = new HashMap<>();
+    private static HashMap<String, BluetoothDevice> mConnectedDevicesMap = new HashMap<>();
     // Hashmap of GATT services for connected devices
     private static HashMap<String, BluetoothGatt> mBluetoothGattMap = new HashMap<>();
     // Hashmap of targeted devices and the sensors that we wish to retrieve readings from
@@ -70,7 +67,7 @@ public class SensorTagMonitoring {
     // Used to store all available SensorTag connections
     private static PriorityQueue<Pair> mBluetoothScanResults = new PriorityQueue<>();
     // Used to keep track of what SensorTags the app is currently connected to
-    private static List<String> mCurrentConnectedBluetooth = new ArrayList<>();
+    //private static List<String> mCurrentConnectedBluetooth = new ArrayList<>();
     // Used to keep track of the RSSI of connected SensorTags
     private static List<Pair> mCurrentConnectedRssi= new ArrayList<>();
     // Used to keep track of the current mode, i.e. whether to scan and connect to sensortags
@@ -82,7 +79,7 @@ public class SensorTagMonitoring {
     //List of connected sensortags pending sensor creation
     private static ArrayList<BluetoothDevice> mPendingSensorCreationList = new ArrayList<>();
 
-    private static int mConnectionsAvailable = MAX_CONNECTED_SENSORTAGS;
+    //private static int mConnectionsAvailable = MAX_CONNECTED_SENSORTAGS;
     private int waitForRssiCallback = 0;
 
     // Actions.
@@ -246,7 +243,7 @@ public class SensorTagMonitoring {
             return false;
         }
         // Previously connected device.  Try to reconnect.
-        if (mBluetoothDeviceMap.containsKey(address) && mBluetoothGattMap.containsKey(address)) {
+        if (mConnectedDevicesMap.containsKey(address) && mBluetoothGattMap.containsKey(address)) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             BluetoothGatt gatt = mBluetoothGattMap.get(address);
             if (gatt.connect())
@@ -260,7 +257,7 @@ public class SensorTagMonitoring {
         mBluetoothGattMap.put(address, device.connectGatt(mContext, false, mGattCallback));
 
         Log.d(TAG, "Trying to create a new connection.");
-        mBluetoothDeviceMap.put(address, device);
+        mConnectedDevicesMap.put(address, device);
         return true;
     }
 
@@ -297,8 +294,7 @@ public class SensorTagMonitoring {
 
         BluetoothGatt gatt = mBluetoothGattMap.get(address);
         gatt.disconnect();
-        mCurrentConnectedBluetooth.remove(address);
-        mConnectionsAvailable++;
+        //mCurrentConnectedBluetooth.remove(address);
     }
 
     /**
@@ -338,8 +334,8 @@ public class SensorTagMonitoring {
 
         //clear out all existence of the remote device upon closure of the connection
         mBluetoothGattMap.remove(address);
-        mBluetoothDeviceMap.remove(address);
-        mCurrentConnectedBluetooth.remove(address);
+        mConnectedDevicesMap.remove(address);
+        //mCurrentConnectedBluetooth.remove(address);
         ArrayList<Sensor> sensors = mSensorsMap.get(address);
         if (sensors != null) {
             for (Sensor sensor : sensors) {
@@ -461,7 +457,7 @@ public class SensorTagMonitoring {
      * The scan results are managed in the callback function: mLeScanCallback
      */
     private void startAutomaticScan() {
-        Log.d(TAG, "Scheduled Bluetooth scan started with " + mBluetoothDeviceMap.size() + " connected devices.");
+        Log.d(TAG, "Scheduled Bluetooth scan started with " + mConnectedDevicesMap.size() + " connected devices.");
         mPendingSensorCreationList = new ArrayList<>();
         //Scan for Bluetooth devices with specified MAC
         mBluetoothScanResults.clear();
@@ -477,6 +473,7 @@ public class SensorTagMonitoring {
      */
     private void stopAutomaticScan() {
         Log.d(TAG, "Scheduled Bluetooth scan stopped and found " + mBluetoothScanResults.size() + " devices." );
+        Log.d(TAG, "Number of connection slots available: " + getConnectionsAvailable() );
 
         //noinspection deprecation
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
@@ -495,7 +492,7 @@ public class SensorTagMonitoring {
         }*/
 
         //get RSSI values of currently connected devices
-        for (String address : mCurrentConnectedBluetooth) {
+        for (String address : mConnectedDevicesMap.keySet()) {
             BluetoothGatt gatt = mBluetoothGattMap.get(address);
             waitForRssiCallback = 1;
             gatt.readRemoteRssi();
@@ -503,7 +500,7 @@ public class SensorTagMonitoring {
         }
 
         // if there are still connections available, just connect to highest priority in scan results
-        while (mConnectionsAvailable > 0 && !mBluetoothScanResults.isEmpty()) {
+        while (getConnectionsAvailable() > 0 && !mBluetoothScanResults.isEmpty()) {
             BluetoothDevice deviceToConnect = mBluetoothScanResults.poll().getKey();
             if (mBluetoothTargetDevicesMap.containsKey(deviceToConnect.getAddress())) {
                 connectDevice(deviceToConnect);
@@ -675,13 +672,16 @@ public class SensorTagMonitoring {
         //is in the list of targeted sensortags
         if (isAutomaticMode && mBluetoothTargetDevicesMap.containsKey(device.getAddress())) {
             if (connect(device.getAddress())) {
-                mCurrentConnectedBluetooth.add(device.getAddress());
-                mConnectionsAvailable --;
+                //mCurrentConnectedBluetooth.add(device.getAddress());
                 Log.d(TAG, "New SensorTag connected - " + device.getAddress());
                 return true;
             }
         }
         return false;
+    }
+
+    private int getConnectionsAvailable() {
+        return MAX_CONNECTED_SENSORTAGS - mConnectedDevicesMap.size();
     }
 
     /**
@@ -756,7 +756,7 @@ public class SensorTagMonitoring {
 
         Date currentTime = new Date();
         ArrayList<String> inactiveDevices = new ArrayList<>();
-        for (String address : mBluetoothDeviceMap.keySet()) {
+        for (String address : mConnectedDevicesMap.keySet()) {
             boolean inactive = false;
 
             ArrayList<Sensor> sensors = mSensorsMap.get(address);
