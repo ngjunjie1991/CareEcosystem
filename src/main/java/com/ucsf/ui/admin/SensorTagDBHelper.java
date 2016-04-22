@@ -87,7 +87,7 @@ public class SensorTagDBHelper extends SQLiteOpenHelper {
         } catch(JSONException e){
             e.printStackTrace();
         }
-
+        cursor.close();
         return results;
 
     }

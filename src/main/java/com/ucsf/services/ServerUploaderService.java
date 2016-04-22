@@ -251,7 +251,7 @@ public class ServerUploaderService extends com.ucsf.core_phone.services.ServerUp
                                         && cursor.moveToFirst()) {
                                     // Parse the table entry
                                     TableEntry entry = parseTableEntry(instance, table, cursor, profile);
-                                    Log.d(TAG,"TableEntry:\t" + entry.toString());
+                                    //Log.d(TAG,"TableEntry:\t" + entry.getContent());
 
                                     // Push the entry to the server, if the file being uploaded is ground truth,
                                     // upload to the config directory on the server

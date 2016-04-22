@@ -75,7 +75,7 @@ public class RegisterSensorTagActivity extends Activity {
             buffer.append("SensorType: " + res.getString(2) + "\n\n");
         }
         showMessage("Data", buffer.toString());
-
+        res.close();
     }
 
     public void onClickUpdateEntry(View view){
